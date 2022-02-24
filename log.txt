@@ -8,11 +8,34 @@ Punto di lavoro e efficienza:
 ------------------------------
 Per i fotomoltiplicatori non estremali si utilizza il metodo delle triple coincidenze. In particolare, avendo fissato le condizioni di lavoro di quelli esterni (tensione di alimentazione e di threshold) si modificano quelle del fotomoltiplicatore interno
 fino a raggiungere efficienze elevate. Prima di effettuare l'operazione, si fa in modo (agendo sempre sulle tensioni di lavoro) che i conteggi dei singoli fotomoltiplicatori siano dello stesso ordine di grandezza. 
-Valori di soglie (negative) al 23.02 [mV] :
-pmt 1 - 	
-pmt 2 - 43*
+Valori di soglie (negative) al 23.02 (24.02) [mV] :
+pmt 1 - 35
+pmt 2 - 43
 pmt 3 - 43
 pmt 4 - 52
 pmt 5 - 43
-pmt 6 - 
+pmt 6 - 43
 
+24 febbraio 2022
+
+Quesito sull'errore sui rapporti: le due misure sono indipendenti?	
+
+Tensioni di alimentazione scelte [V]:
+----------------------------
+pmt 1 - 1745
+pmt 2 - 1668
+pmt 3 - 1685 
+pmt 4 - 1668
+pmt 5 - 1670
+pmt 6 -  1710
+
+Si osservano ripartenze nel segnale proveniente dal 7 pmt, per il momento escluso dalla trattazione.
+
+Timing conicidenze
+--------------------
+Osserviamo i ritardi nei segnali provenienti dai pmt per effettuare una stima del rate delle coincidenze di tutto l'apparato. Osservando all'oscilloscopio si osserva un ritardo tra il pmt 1 e il pmt 2 di 5 ns, trascurabile ripetto alla 
+durata del segnale discriminato.
+
+Misura rate coincidenze a 6
+------------------------------
+A causa della mancanza di un'unità di coincidenza a 6 ingressi, per il conteggio si inviano al modulo due segnali di coincidenza di 3 segnali,  e si contano. 
