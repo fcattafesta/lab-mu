@@ -1,16 +1,18 @@
 Tensione di alimentazione fissata a 1700 V. 
+
 Discriminazione INFN 4CHS
 Ritardo introdotto dal discriminatore 15.5 ns con cursore.
 Settati solo disccriminatori 1,2,3 con soglia e durata segnale (90 ns). 
+
 Punto di lavoro e efficienza:
+------------------------------
+Per i fotomoltiplicatori non estremali si utilizza il metodo delle triple coincidenze. In particolare, avendo fissato le condizioni di lavoro di quelli esterni (tensione di alimentazione e di threshold) si modificano quelle del fotomoltiplicatore interno
+fino a raggiungere efficienze elevate. Prima di effettuare l'operazione, si fa in modo (agendo sempre sulle tensioni di lavoro) che i conteggi dei singoli fotomoltiplicatori siano dello stesso ordine di grandezza. 
+Valori di soglie (negative) al 23.02 [mV] :
+pmt 1 - 	
+pmt 2 - 43*
+pmt 3 - 43
+pmt 4 - 52
+pmt 5 - 43
+pmt 6 - 
 
-
-efficienza scintillatore 5: 
-1700	104/108 96.3 %
-1725	116/117	99.1 % 
-1675	116/128	90.6 %
-1650	91/107	85 %
-1750	126/127	99.2 %
-1680 	1095/1167 93.8 %
-1700	1131/1175	96.3 %
-1600	44/129
