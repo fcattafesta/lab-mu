@@ -16,22 +16,25 @@ v, triplets, doublets = np.loadtxt((data_path), unpack=True)
 v = v * 1e-3
 dv = np.ones_like(v) * 0.001
 
-d_triple = np.sqrt(triplets)
-d_double = np.sqrt(doublets)
-
 w = triplets/doublets
-dw = np.sqrt((d_triple/triplets)**2 + (d_double/doublets)**2)
+dw = np.sqrt(triplets * (doublets - triplets) / doublets**3)
 
 X = np.stack([v, w, dv, dw], axis=1)
 
 eff_name = ''.join(['eff', data_name])
+fig_name = ''.join(['PMT', f'{args.detector_number}', '.png'])
 eff_path = os.path.join(os.path.dirname(__file__), 'efficiencies', eff_name)
-
+fig_path = os.path.join(os.path.dirname(__file__), 'figures', fig_name)
 np.savetxt(eff_path, X, fmt='%.3f')
 
 title = f'Efficienza scintillatore {args.detector_number}; alimentazione [kV]; #epsilon'
+c = ROOT.TCanvas('c1')
+c.SetGrid()
 g = ROOT.TGraphErrors(eff_path)
 g.SetMarkerStyle(8)
 g.SetTitle(title)
+ROOT.gPad.SetGrid(1, 1)
 g.Draw("AP")
+c.Update()
+c.SaveAs(fig_path)
 input()
