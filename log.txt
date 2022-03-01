@@ -27,21 +27,21 @@ pmt 2 - 1668
 pmt 3 - 1685 
 pmt 4 - 1668
 pmt 5 - 1670
-pmt 6 -  1710
+pmt 6 - 1710
 
 Si osservano ripartenze nel segnale proveniente dal 7 pmt, per il momento escluso dalla trattazione.
 
 Timing conicidenze
---------------------
-Osserviamo i ritardi nei segnali provenienti dai pmt per effettuare una stima del rate delle coincidenze di tutto l'apparato. Osservando all'oscilloscopio si osserva un ritardo tra il pmt 1 e il pmt 2 di 5 ns, trascurabile ripetto alla 
-durata del segnale discriminato.
+-------------------
+Osserviamo i ritardi nei segnali provenienti dai pmt per effettuare una stima del rate delle coincidenze di tutto l'apparato. Osservando all'oscilloscopio si osserva un ritardo tra il pmt 1 e il pmt 2 di 5 ns, trascurabile ripetto alla durata del segnale discriminato.
 
 Misura rate coincidenze a 6
-------------------------------
-A causa della mancanza di un'unità di coincidenza a 6 ingressi, per il conteggio si inviano al modulo due segnali di coincidenza di 3 segnali,  e si contano. 
+----------------------------
+A causa della mancanza di un'unità di coincidenza a 6 ingressi, per il conteggio si inviano al modulo due segnali di coincidenza di 3 segnali, e si contano. Fatte prove da 100s con tre combinazioni possibili: rate dello stesso ordine di grandezza ma vi sono dubbi su come trattare le differenze.
+Presa dati lunga con combinazione 123+456: rate = 2.126 Hz
 
 Misura delle efficienze al punto di lavoro
---------------------------------------------
+-------------------------------------------
 Si contano doppie e triple coincidenze con i fotomoltiplicatori alimentati con la tensione di lavoro.
 
 Stima del flusso
@@ -49,6 +49,22 @@ Stima del flusso
 Dimensioni telescopio (h*A) 80x40x48 cm**3
 Montecarlo --> accettanza = 30 % (1e6 samples)
 Flusso \simeq 258 m**-2 s**-1
+
+
+Logica di START
+----------------
+Spazio di interesse = intercapedine tra le palette 3 e 4
+START = (6*5*4) * 3bar
+Segnale di VETO (=3bar) realizzato invertendo l'OUT del PMT 3 tramite la timing unit CAEN 2255A; da regolare il ritardo e ampiezza del segnale 
+
+
+Discorsi iniziati:
+	- elettrone nei materiali -> determinare spessore ottimale da piazzare
+	- ottimizzazione segnale di STOP: quali coincidenze è più conveniente considerare?
+	- segnale di GATE: da realizzare per acquisizioni con FPGA; valutare se possibile/conveniente/necessario impedire la partenza di uno START prima della chiusura del GATE 
+	- ottimizzazione segnale di STOP: quali coincidenze è più conveniente considerare?
+	
+
 
 
 
