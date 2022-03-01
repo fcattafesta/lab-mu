@@ -39,3 +39,35 @@ durata del segnale discriminato.
 Misura rate coincidenze a 6
 ------------------------------
 A causa della mancanza di un'unità di coincidenza a 6 ingressi, per il conteggio si inviano al modulo due segnali di coincidenza di 3 segnali,  e si contano. 
+
+Misura delle efficienze al punto di lavoro
+--------------------------------------------
+Si contano doppie e triple coincidenze con i fotomoltiplicatori alimentati con la tensione di lavoro.
+
+Stima del flusso
+-----------------
+Dimensioni telescopio (h*A) 80x40x48 cm**3
+Montecarlo --> accettanza = 30 % (1e6 samples)
+Flusso \simeq 258 m**-2 s**-1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
