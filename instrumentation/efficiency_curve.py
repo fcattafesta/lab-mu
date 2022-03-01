@@ -27,7 +27,7 @@ eff_path = os.path.join(os.path.dirname(__file__), 'efficiencies', eff_name)
 fig_path = os.path.join(os.path.dirname(__file__), 'figures', fig_name)
 np.savetxt(eff_path, X, fmt='%.3f')
 
-title = f'Efficienza scintillatore {args.detector_number}; alimentazione [kV]; #epsilon'
+title = f'Efficienza scintillatore {args.detector_number};alimentazione [kV]; #epsilon'
 c = ROOT.TCanvas('c1')
 c.SetGrid()
 g = ROOT.TGraphErrors(eff_path)
