@@ -62,9 +62,20 @@ Discorsi iniziati:
 	- elettrone nei materiali -> determinare spessore ottimale da piazzare
 	- ottimizzazione segnale di STOP: quali coincidenze è più conveniente considerare?
 	- segnale di GATE: da realizzare per acquisizioni con FPGA; valutare se possibile/conveniente/necessario impedire la partenza di uno START prima della chiusura del GATE 
-	- ottimizzazione segnale di STOP: quali coincidenze è più conveniente considerare?
-	
 
+	
+1.2 cm Fe
+----------
+triple:	triple * veto
+1352	869
+
+2 cm Fe
+----------
+
+
+
+
+Veto width 200 ns
 
 
 
