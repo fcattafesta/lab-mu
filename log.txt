@@ -71,11 +71,12 @@ triple:	triple * veto
 
 2 cm Fe
 ----------
-
+1627	737
 
 
 
 Veto width 200 ns
+t_coinc - t_veto = 38 ns - 40 ns (coincidenza ritardata)
 
 
 
