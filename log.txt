@@ -78,6 +78,15 @@ triple:	triple * veto
 Veto width 200 ns
 t_coinc - t_veto = 38 ns - 40 ns (coincidenza ritardata)
 
+Effettuata la logica di start e stop per l'acquisizione digitale. Il segnale di gate è in coincidenza con lo stop ed è costituito da un segnale di start opportunamente modulato. La durata del gate è di 20 us (verifica il numero)
+Si effettua la conversione in (low) TTL e si inviano i due segnali all'FPGA.
+
+Per quato riguarda l'assorbitore un calcolo approssimato sulla perdita di energia per muoni ed elettroni nel ferro conduce ad uno spessore pari a 0.8 cm. In questo modo riusciamo a fermare muoni fino a 200 MeV e gli elettroni di energia 
+superiore a 15 MeV hanno la possibilità di attraversare il materiale per poi interagire con lo scintillatore.
+
+Visualizzando all'oscilloscopio i segnali provenienti dai rivelatori appena sopra e sotto l'assorbitore, osserviamo un minor numero di decadimenti 'verso il basso'. La considerazione è qualitativa ed è necessario effettuare una valutazione
+ad esempio contando il segnale di stop per un singolo rivelatore.
+
 
 
 
