@@ -1,6 +1,11 @@
-1 7532  8060  7062  0     0     0
-2 8040  8521  7876  0     0     0
-3 0     8321  7413  20028 0     0
-4 0     0     7765  20900 7797  0
-5 0     0     0     20683 7585  6823
-6 0     0     0     20152 7626  6732
+#Distinction bewteen the pair of PMTs used in double coincidences measurments
+#and the ones used only in triple.
+
+#id #doubl1   #tripl  #doubl2
+#----------------------------
+1   8060      7532    7062
+2   8040      8521    7876
+3   8321      7413    20028
+4   7765      20900   7797
+5   20683     7585    6823
+6   20152     6732    7626
