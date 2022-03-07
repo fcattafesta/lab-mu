@@ -1,18 +1,20 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+# from acceptance import acceptance
+
+acceptance = 1.0
 
 counts_path = os.path.join(os.path.dirname(__file__), 'counts')
 
 single = np.loadtxt(os.path.join(counts_path, 'single_rate.txt'))
 coinc = np.loadtxt(os.path.join(counts_path, 'coincidences.txt'))
 
-F = 1.8e-5
+width = 1.8e-5
 time = 100
-acceptance = 1.0
 
-fake_double = single[:, 1] * single[:, 3] * F / (coinc[:, 2] * time)
-fake_triple = single[:, 2] * coinc[:, 2] * F / (coinc[:, 1] * time)
+fake_double = single[:, 1] * single[:, 3] * width / (coinc[:, 2] * time)
+fake_triple = single[:, 2] * coinc[:, 2] * width / (coinc[:, 1] * time)
 
 e = (coinc[:, 1] / coinc[:, 2]) / acceptance
 de = np.sqrt(coinc[:, 1] * (coinc[:, 2] - coinc[:, 1])
