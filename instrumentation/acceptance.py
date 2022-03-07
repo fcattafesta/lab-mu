@@ -33,10 +33,10 @@ double make_simulation(int n_run, float h, float lx, float ly, float llx, float 
 
 ROOT.gInterpreter.ProcessLine(cpp_code)
 
-z = [50, 20, 20, 20, 20, 20]
+z = [40, 0, 0, 0, 0, 10]
 x = 40
 y = 48
-n_sample = 10000000
+n_sample = 100000
 
 acceptance = [0, 0, 0, 0, 0, 0]
 

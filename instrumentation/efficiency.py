@@ -1,9 +1,9 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-# from acceptance import acceptance
+from acceptance import acceptance
 
-acceptance = 1.0
+# acceptance = 1.0
 
 counts_path = os.path.join(os.path.dirname(__file__), 'counts')
 
