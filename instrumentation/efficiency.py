@@ -20,7 +20,8 @@ e = (coinc[:, 1] / coinc[:, 2]) / acceptance
 de = np.sqrt(coinc[:, 1] * (coinc[:, 2] - coinc[:, 1])
              / coinc[:, 2]**3) / acceptance
 
-X = np.stack([single[:, 0], e, de, fake_double, fake_triple], axis=1)
+X = np.stack([single[:, 0], e, de, fake_double,
+             fake_triple, acceptance], axis=1)
 
 np.savetxt(os.path.join(counts_path, '..', 'efficiencies',
            'working_efficiencies.txt'), X, fmt='%.3f')

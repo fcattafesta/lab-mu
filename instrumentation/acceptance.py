@@ -44,4 +44,3 @@ for i, z in enumerate(z):
     acceptance[i] = ROOT.make_simulation(n_sample, z, x, y, x, y)
 
 acceptance = np.array(acceptance)
-print(acceptance)
