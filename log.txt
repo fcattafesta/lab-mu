@@ -1,13 +1,13 @@
-Tensione di alimentazione fissata a 1700 V. 
+Tensione di alimentazione fissata a 1700 V.
 
 Discriminazione INFN 4CHS
 Ritardo introdotto dal discriminatore 15.5 ns con cursore.
-Settati solo disccriminatori 1,2,3 con soglia e durata segnale (90 ns). 
+Settati solo disccriminatori 1,2,3 con soglia e durata segnale (90 ns).
 
 Punto di lavoro e efficienza:
 ------------------------------
 Per i fotomoltiplicatori non estremali si utilizza il metodo delle triple coincidenze. In particolare, avendo fissato le condizioni di lavoro di quelli esterni (tensione di alimentazione e di threshold) si modificano quelle del fotomoltiplicatore interno
-fino a raggiungere efficienze elevate. Prima di effettuare l'operazione, si fa in modo (agendo sempre sulle tensioni di lavoro) che i conteggi dei singoli fotomoltiplicatori siano dello stesso ordine di grandezza. 
+fino a raggiungere efficienze elevate. Prima di effettuare l'operazione, si fa in modo (agendo sempre sulle tensioni di lavoro) che i conteggi dei singoli fotomoltiplicatori siano dello stesso ordine di grandezza.
 Valori di soglie (negative) al 23.02 (24.02) [mV] :
 pmt 1 - 35
 pmt 2 - 43
@@ -18,13 +18,13 @@ pmt 6 - 43
 
 24 febbraio 2022
 
-Quesito sull'errore sui rapporti: le due misure sono indipendenti?	
+Quesito sull'errore sui rapporti: le due misure sono indipendenti?
 
 Tensioni di alimentazione scelte [V]:
 ----------------------------
 pmt 1 - 1745
 pmt 2 - 1668
-pmt 3 - 1685 
+pmt 3 - 1685
 pmt 4 - 1668
 pmt 5 - 1670
 pmt 6 - 1710
@@ -55,56 +55,30 @@ Logica di START
 ----------------
 Spazio di interesse = intercapedine tra le palette 3 e 4
 START = (6*5*4) * 3bar
-Segnale di VETO (=3bar) realizzato invertendo l'OUT del PMT 3 tramite la timing unit CAEN 2255A; da regolare il ritardo e ampiezza del segnale 
+Segnale di VETO (=3bar) realizzato invertendo l'OUT del PMT 3 tramite la timing unit CAEN 2255A; da regolare il ritardo e ampiezza del segnale
 
 
-Discorsi iniziati:
-	- elettrone nei materiali -> determinare spessore ottimale da piazzare
-	- ottimizzazione segnale di STOP: quali coincidenze è più conveniente considerare?
-	- segnale di GATE: da realizzare per acquisizioni con FPGA; valutare se possibile/conveniente/necessario impedire la partenza di uno START prima della chiusura del GATE 
-
-	
-1.2 cm Fe
-----------
-triple:	triple * veto
-1352	869
-
-2 cm Fe
-----------
-1627	737
-
+Numero di muoni fermati [triple, triple+veto]
+------------------------
+1.2 cm Fe : 	1352	869
+2 cm Fe	:		1627	737
 
 
 Veto width 200 ns
 t_coinc - t_veto = 38 ns - 40 ns (coincidenza ritardata)
 
-Effettuata la logica di start e stop per l'acquisizione digitale. Il segnale di gate è in coincidenza con lo stop ed è costituito da un segnale di start opportunamente modulato. La durata del gate è di 20 us (verifica il numero)
+Effettuata la logica di start e stop per l'acquisizione digitale.
+Gate in coincidenza con lo stop ed è costituito da un segnale di start opportunamente modulato. Durata = 22 us
 Si effettua la conversione in (low) TTL e si inviano i due segnali all'FPGA.
 
-Per quato riguarda l'assorbitore un calcolo approssimato sulla perdita di energia per muoni ed elettroni nel ferro conduce ad uno spessore pari a 0.8 cm. In questo modo riusciamo a fermare muoni fino a 200 MeV e gli elettroni di energia 
-superiore a 15 MeV hanno la possibilità di attraversare il materiale per poi interagire con lo scintillatore.
+(Per quanto riguarda l'assorbitore un calcolo approssimato sulla perdita di energia per muoni ed elettroni nel ferro conduce ad uno spessore pari a 0.8 cm. In questo modo riusciamo a fermare muoni fino a 200 MeV e gli elettroni di energia
+superiore a 15 MeV hanno la possibilità di attraversare il materiale per poi interagire con lo scintillatore.)
 
 Visualizzando all'oscilloscopio i segnali provenienti dai rivelatori appena sopra e sotto l'assorbitore, osserviamo un minor numero di decadimenti 'verso il basso'. La considerazione è qualitativa ed è necessario effettuare una valutazione
 ad esempio contando il segnale di stop per un singolo rivelatore.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Numero di STOP molto minore del numero di START: misura del rapporto al variare dello spessore del materiale (ferro)
+Tentativo di spiegare tale differenza con un montecarlo che tenga di conto di:
+	- punto di stop del muone (distr. unif. nello spessore)
+	- direzione arbitraria di emissione dell'elettrone
