@@ -1,13 +1,18 @@
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RVec.hxx"
 #include "TH1F.h"
+#include "TF1.h"
+#include "TCanvas.h"
+#include "TLegend.h"
 #include <iostream>
 
 void time_analysis() {
 
-  TFile *file = new TFile("0803_1635.root");
+  TFile *file = new TFile("total.root");
   TTree	* tree = (TTree*)file->Get("events");
-  TH1F * h = new TH1F("hist", "#Delta t", 20, 0, 10);
+  TH1F * h = new TH1F("hist", ";#Delta t [#mus]; ", 20, 1.5, 22.5);
+  TCanvas * c = new TCanvas();
+
   int channel; double times;
 
   tree->SetBranchAddress("channel", &channel);
@@ -29,6 +34,22 @@ void time_analysis() {
       h->Fill((times_ii - times_i) * 1e6 );
     }
   }
-  h->Fit("expo");
-  h->Draw();
+
+  TF1 * f1 = new TF1("f1", "expo", 0, 22.5);
+
+  h->Fit(f1, "L");
+  auto l = h->GetFunction("f1");
+  l->SetLineColor(kBlue);
+  h->Fit("expo", "+");
+  auto chi = h->GetFunction("expo");
+  chi->SetLineColor(kOrange);
+  h->Draw("E1");
+
+  auto legend = new TLegend(0.5, 0.5, 0.5, 0.5);
+  legend->AddEntry(h, "Measured distribution");
+  legend->AddEntry(l, "Likelihood expo fit");
+  legend->AddEntry(h, "Chi2 expo fit");
+  legend->Draw();
+  c->SaveAs("figures/fit.png");
+
 }
