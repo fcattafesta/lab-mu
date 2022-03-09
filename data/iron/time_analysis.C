@@ -5,7 +5,7 @@
 
 void time_analysis() {
 
-  TFile *file = new TFile("0803_1530.root");
+  TFile *file = new TFile("0803_1635.root");
   TTree	* tree = (TTree*)file->Get("events");
   TH1F * h = new TH1F("hist", "#Delta t", 20, 0, 10);
   int channel; double times;
@@ -29,5 +29,6 @@ void time_analysis() {
       h->Fill((times_ii - times_i) * 1e6 );
     }
   }
+  h->Fit("expo");
   h->Draw();
 }

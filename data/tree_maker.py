@@ -21,3 +21,6 @@ def make_tree(filepath):
 
     tree.Write()
     f.Close()
+
+
+make_tree('data/iron/0803_1635')
