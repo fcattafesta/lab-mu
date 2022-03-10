@@ -40,7 +40,8 @@ def make_tree(filepath, datapath):
 
 datapath = os.path.join(os.path.dirname(__file__), 'iron')
 
-filenames = ['0803_1530.dat', '0803_1606.dat', '0803_1635.dat']
+filenames = ['0803_1530.dat', '0803_1606.dat',
+             '0803_1635.dat', '0903_1125.dat']
 
 filepaths = [os.path.join(datapath, name) for name in filenames]
 

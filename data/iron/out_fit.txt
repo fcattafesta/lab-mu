@@ -16,3 +16,48 @@ Processing time_analysis.C...
    2  Slope       -4.67881e-01   1.14688e-02   3.71974e-05  -1.29931e-02
 
 ________________________________________________________________________________
+
+Processing time_analysis.C...
+ FCN=255.172 FROM MIGRAD    STATUS=CONVERGED      49 CALLS          50 TOTAL
+                     EDM=1.56912e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     7.46654e+00   3.45757e-02   2.05930e-04   2.12385e-03
+   2  Slope       -3.43750e-01   6.57774e-03   3.91761e-05   9.33845e-03
+                               ERR DEF= 0.5
+ FCN=254.88 FROM MIGRAD    STATUS=CONVERGED      68 CALLS          69 TOTAL
+                     EDM=5.2337e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     7.91715e+00   4.08972e-02   1.52562e-04   1.12841e-02
+   2  Slope       -4.80207e-01   9.90531e-03   3.69426e-05   6.48376e-02
+
+Processing time_analysis.C...
+ FCN=255.172 FROM MIGRAD    STATUS=CONVERGED      49 CALLS          50 TOTAL
+                     EDM=1.56912e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     7.46654e+00   3.45757e-02   2.05930e-04   2.12385e-03
+   2  Slope       -3.43750e-01   6.57774e-03   3.91761e-05   9.33845e-03
+                               ERR DEF= 0.5
+ FCN=254.88 FROM MIGRAD    STATUS=CONVERGED      68 CALLS          69 TOTAL
+                     EDM=5.2337e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     7.91715e+00   4.08972e-02   1.52562e-04   1.12841e-02
+   2  Slope       -4.80207e-01   9.90531e-03   3.69426e-05   6.48376e-02
+
+Processing time_analysis.C...
+ FCN=447.509 FROM MIGRAD    STATUS=CONVERGED      48 CALLS          49 TOTAL
+                     EDM=4.42396e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     6.82248e+00   1.92402e-02   1.97840e-04   3.99913e-03
+   2  Slope       -3.73346e-01   5.10144e-03   5.24509e-05   1.82952e-02
+                               ERR DEF= 0.5
+ FCN=623.158 FROM MIGRAD    STATUS=CONVERGED      64 CALLS          65 TOTAL
+                     EDM=3.47617e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     6.88117e+00   1.94873e-02   1.75304e-04  -1.67854e-02
+   2  Slope       -4.46797e-01   5.85439e-03   5.26435e-05   9.86213e-02

@@ -8,9 +8,11 @@
 
 void time_analysis() {
 
+  double tmin = 1.5, tmax = 22.5;
+  int nbins = 20;
   TFile *file = new TFile("total.root");
   TTree	* tree = (TTree*)file->Get("events");
-  TH1F * h = new TH1F("hist", ";#Delta t [#mus]; ", 20, 1.5, 22.5);
+  TH1F * h = new TH1F("hist", ";#Delta t [#mus]; ", nbins, tmin, tmax);
   TCanvas * c = new TCanvas();
 
   int channel; double times;
@@ -35,21 +37,23 @@ void time_analysis() {
     }
   }
 
-  TF1 * f1 = new TF1("f1", "expo", 0, 22.5);
+  TF1 * f1 = new TF1("f1", "[2]+expo", tmin, tmax);
+  //TF1 * f2 = new TF1("f2", "[2]+expo", 0, 22.5);
+
 
   h->Fit(f1, "L");
   auto l = h->GetFunction("f1");
   l->SetLineColor(kBlue);
-  h->Fit("expo", "+");
-  auto chi = h->GetFunction("expo");
-  chi->SetLineColor(kOrange);
+  //h->Fit(f2, "+");
+  //auto chi = h->GetFunction("f2");
+  //chi->SetLineColor(kOrange);
   h->Draw("E1");
 
-  auto legend = new TLegend(0.5, 0.5, 0.5, 0.5);
+  /*auto legend = new TLegend(0.3, 0.3, 0.3, 0.3);
   legend->AddEntry(h, "Measured distribution");
   legend->AddEntry(l, "Likelihood expo fit");
   legend->AddEntry(h, "Chi2 expo fit");
-  legend->Draw();
+  legend->Draw();*/
   c->SaveAs("figures/fit.png");
 
 }
