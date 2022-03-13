@@ -17,8 +17,8 @@ void time_analysis() {
 
   int channel; double times;
 
-  tree->SetBranchAddress("channel", &channel);
-  tree->SetBranchAddress("times", &times);
+  auto fillHist = [](TTree* tree, TH1F* hist ) {
+    int channel; double times;
 
   int events_in_range=0;
 
@@ -26,26 +26,27 @@ void time_analysis() {
     int ch_i, ch_ii;
     double times_i, times_ii;
 
-    tree->GetEntry(i);
-    ch_i = channel;
-    times_i = times;
+    for (auto i=0; i<tree->GetEntries()-1; i++) {
+      int ch_i, ch_ii;
+      double times_i, times_ii;
 
-    tree->GetEntry(i+1);
-    ch_ii = channel;
-    times_ii = times;
+      tree->GetEntry(i);
+      ch_i = channel;
+      times_i = times;
 
     if (ch_ii > ch_i) {
       double dt = (times_ii - times_i) * 1e6;
       h->Fill(dt);
       if (dt>= tmin && dt<=tmax) events_in_range ++;
     }
-  }
+  };
 
   double r_fake = 0.03;
   double noise_const = 0.03*events_in_range/nbins;
   cout << "Eventi nel range selezionato = " << events_in_range << endl;
   cout << "Costante di rumore = " << noise_const << endl;
 
+  TF1 * func1 = new TF1("myExpo", "[2]+expo", tmin, tmax);
 
   TF1 * f1 = new TF1("f1", "expo + 1.92975", tmin, tmax);
   //f1->SetParameter(2, 8.22);

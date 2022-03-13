@@ -4,8 +4,8 @@ import numpy as np
 import ROOT
 
 
-def merge_dat(filepaths, datapath):
-    finalpath = os.path.join(datapath, 'total.dat')
+def merge_dat(filepaths, datapath, name='total.dat'):
+    finalpath = os.path.join(datapath, name)
     x = np.array([])
     for f in filepaths:
         data = np.genfromtxt(f)
@@ -18,8 +18,8 @@ def merge_dat(filepaths, datapath):
     return finalpath
 
 
-def make_tree(filepath, datapath):
-    treepath = os.path.join(datapath, 'total.root')
+def make_tree(filepath, datapath, name='total.root'):
+    treepath = os.path.join(datapath, name)
 
     ch, t = np.genfromtxt(filepath, unpack=True, dtype=None)
 
@@ -48,3 +48,5 @@ filepaths = [os.path.join(datapath, name) for name in filenames]
 merge_dat(filepaths, datapath)
 
 make_tree(merge_dat(filepaths, datapath), datapath)
+make_tree(os.path.join(datapath, '1003_1807_bkg.dat'),
+          datapath, name='bkg.root')
