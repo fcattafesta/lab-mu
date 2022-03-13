@@ -9,26 +9,28 @@ figpath = os.path.join(dirpath, '..', '..', 'figures',
 label = ['carbon', 'aluminum', 'iron', 'lead']
 density = np.array([2.267, 2.7, 7.874, 11.340])
 
-stop_power = np.array([])
+range = np.array([])
 
 for name in label:
-    kin_energy, loss = np.loadtxt(
-        ''.join([os.path.join(dirpath, name), '.txt']), unpack=True, usecols=(0, 7))
-    if stop_power.size:
-        stop_power = np.column_stack((stop_power, loss))
+    kin_energy, material_range = np.loadtxt(
+        ''.join([os.path.join(dirpath, name), '.txt']), unpack=True,
+        usecols=(0, 8))
+    if range.size:
+        range = np.column_stack((range, material_range))
     else:
-        stop_power = np.stack((kin_energy, loss), axis=1)
-    del loss, kin_energy
+        range = np.stack((kin_energy, material_range), axis=1)
+    del material_range, kin_energy
+
 
 for i, name in enumerate(label):
-    plt.plot(stop_power[:, 0], stop_power[:, i+1] * density[i], label=name)
+    plt.plot(range[:, 0], range[:, i+1] / density[i], label=name)
 
 plt.legend()
 plt.yscale('log')
-plt.ylabel(r'$\frac{dE}{dx}$ [MeV/cm]')
+plt.ylabel('Range [cm]')
 plt.xlabel('Muon Kinetic Energy [MeV]')
 plt.xscale('log')
-plt.title('Muon total stopping power')
+plt.title('Muon total range')
 plt.minorticks_on()
 plt.grid(which='both', ls='--', alpha=0.5)
 plt.savefig(figpath)

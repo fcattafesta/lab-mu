@@ -38,15 +38,14 @@ def make_tree(filepath, datapath, name='total.root'):
     f.Close()
 
 
-datapath = os.path.join(os.path.dirname(__file__), 'iron')
+datapath = os.path.join(os.path.dirname(__file__), 'iron', 'acquisitions')
 
 filenames = ['0803_1530.dat', '0803_1606.dat',
              '0803_1635.dat', '0903_1125.dat']
 
 filepaths = [os.path.join(datapath, name) for name in filenames]
+rootpath = os.path.join(os.path.dirname(__file__), 'iron', 'root_data')
 
-merge_dat(filepaths, datapath)
-
-make_tree(merge_dat(filepaths, datapath), datapath)
+make_tree(merge_dat(filepaths, datapath), rootpath)
 make_tree(os.path.join(datapath, '1003_1807_bkg.dat'),
-          datapath, name='bkg.root')
+          rootpath, name='bkg.root')
