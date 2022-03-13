@@ -8,8 +8,8 @@
 
 void time_analysis() {
 
-  double tmin = 1.5, tmax = 22.5;
-  int nbins = 20;
+  double tmin = 1.81, tmax = 22.5;
+  int nbins = 40;
   TFile *file = new TFile("total.root");
   TTree	* tree = (TTree*)file->Get("events");
   TH1F * h = new TH1F("hist", ";#Delta t [#mus]; ", nbins, tmin, tmax);
@@ -19,6 +19,8 @@ void time_analysis() {
 
   tree->SetBranchAddress("channel", &channel);
   tree->SetBranchAddress("times", &times);
+
+  int events_in_range=0;
 
   for (auto i=0; i<tree->GetEntries()-1; i++) {
     int ch_i, ch_ii;
@@ -33,13 +35,20 @@ void time_analysis() {
     times_ii = times;
 
     if (ch_ii > ch_i) {
-      h->Fill((times_ii - times_i) * 1e6 );
+      double dt = (times_ii - times_i) * 1e6;
+      h->Fill(dt);
+      if (dt>= tmin && dt<=tmax) events_in_range ++;
     }
   }
 
-  TF1 * f1 = new TF1("f1", "[2]+expo", tmin, tmax);
-  //TF1 * f2 = new TF1("f2", "[2]+expo", 0, 22.5);
+  double r_fake = 0.03;
+  double noise_const = 0.03*events_in_range/nbins;
+  cout << "Eventi nel range selezionato = " << events_in_range << endl;
+  cout << "Costante di rumore = " << noise_const << endl;
 
+
+  TF1 * f1 = new TF1("f1", "expo + 1.92975", tmin, tmax);
+  //f1->SetParameter(2, 8.22);
 
   h->Fit(f1, "L");
   auto l = h->GetFunction("f1");
@@ -48,12 +57,14 @@ void time_analysis() {
   //auto chi = h->GetFunction("f2");
   //chi->SetLineColor(kOrange);
   h->Draw("E1");
+  l->Draw("same");
+
 
   /*auto legend = new TLegend(0.3, 0.3, 0.3, 0.3);
   legend->AddEntry(h, "Measured distribution");
   legend->AddEntry(l, "Likelihood expo fit");
   legend->AddEntry(h, "Chi2 expo fit");
   legend->Draw();*/
-  c->SaveAs("figures/fit.png");
+  //c->SaveAs("figures/fit.png");
 
 }
