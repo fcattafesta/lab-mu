@@ -1,63 +1,77 @@
-#include "ROOT/RDataFrame.hxx"
-#include "ROOT/RVec.hxx"
-#include "TH1F.h"
-#include "TF1.h"
-#include "TCanvas.h"
-#include "TLegend.h"
-#include <iostream>
 
 void time_analysis() {
 
-  double tmin = 1.81, tmax = 22.5;
+  double tmin1 = 1.81, tmax1 = 22.5;
+  double tmin2 = tmin1, tmax2 = 55.0;
+
   int nbins = 40;
-  TFile *file = new TFile("total.root");
-  TTree	* tree = (TTree*)file->Get("events");
-  TH1F * h = new TH1F("hist", ";#Delta t [#mus]; ", nbins, tmin, tmax);
-  TCanvas * c = new TCanvas();
 
-  int channel; double times;
+  auto f1 = new TFile("total.root");
+  auto f2 = new TFile("bkg.root");
 
-  tree->SetBranchAddress("channel", &channel);
-  tree->SetBranchAddress("times", &times);
+  auto t1 = f1->Get<TTree>("events");
+  auto t2 = f2->Get<TTree>("events");
 
-  int events_in_range=0;
+  auto h1 = new TH1D("signal", ";#Delta t [#mus]; ", nbins, tmin1, tmax1);
+  auto h2 = new TH1D("background", ";#Delta t [#mus]; ", nbins, tmin2, tmax2);
 
-  for (auto i=0; i<tree->GetEntries()-1; i++) {
-    int ch_i, ch_ii;
-    double times_i, times_ii;
+  auto c = new TCanvas("c", "c");
 
-    tree->GetEntry(i);
-    ch_i = channel;
-    times_i = times;
+  auto tree_reader = [=](TTree* tree, TH1D* hist) {
 
-    tree->GetEntry(i+1);
-    ch_ii = channel;
-    times_ii = times;
+    int channel; double times;
+    int entries = 0;
 
-    if (ch_ii > ch_i) {
-      double dt = (times_ii - times_i) * 1e6;
-      h->Fill(dt);
-      if (dt>= tmin && dt<=tmax) events_in_range ++;
+    tree->SetBranchAddress("channel", &channel);
+    tree->SetBranchAddress("times", &times);
+
+    for (auto i=0; i<tree->GetEntries()-1; i++) {
+      int ch_i, ch_ii;
+      double times_i, times_ii;
+
+      tree->GetEntry(i);
+      ch_i = channel;
+      times_i = times;
+
+      tree->GetEntry(i+1);
+      ch_ii = channel;
+      times_ii = times;
+
+      if (ch_ii > ch_i) {
+        double dt = (times_ii - times_i) * 1e6;
+        hist->Fill(dt);
+        if (dt>= tmin1 && dt<=tmax1) entries ++;
+      }
     }
-  }
+      return entries;
+  };
 
-  double r_fake = 0.03;
-  double noise_const = 0.03*events_in_range/nbins;
-  cout << "Eventi nel range selezionato = " << events_in_range << endl;
+  int entries = tree_reader(t1, h1);
+
+  int bkg_entries = tree_reader(t2, h2);
+
+  /*double r_fake = 0.03;
+  double noise_const = 0.03 * tree_reader(t1, h1) / nbins;
+
+  cout << "Eventi nel range selezionato = " << entries << endl;
   cout << "Costante di rumore = " << noise_const << endl;
+  */
 
+  auto exp = new TF1("exp", "[2] + expo", tmin1, tmax1);
+  auto unif = new TF1("unif", "pol0", tmin2, tmax2);
 
-  TF1 * f1 = new TF1("f1", "expo + 1.92975", tmin, tmax);
-  //f1->SetParameter(2, 8.22);
+  //c->SetLogy();
 
-  h->Fit(f1, "L");
-  auto l = h->GetFunction("f1");
-  l->SetLineColor(kBlue);
-  //h->Fit(f2, "+");
-  //auto chi = h->GetFunction("f2");
-  //chi->SetLineColor(kOrange);
-  h->Draw("E1");
-  l->Draw("same");
+  h1->Fit(exp, "L", "", tmin1, 22.5);
+  h2->Fit(unif, "L");
+  auto e = h1->GetFunction("exp");
+  auto u = h2->GetFunction("unif");
+  e->SetLineColor(kBlue);
+  e->Draw("same");
+  u->SetLineColor(kRed);
+  u->Draw("same");
+  h1->Draw("E1");
+  h2->Draw("E1 same");
 
 
   /*auto legend = new TLegend(0.3, 0.3, 0.3, 0.3);
