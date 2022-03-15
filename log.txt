@@ -95,3 +95,8 @@ stop 5.04 hz
 
 start 3bar 2bar veto 3.72 hz
 stop 3.99 hz
+
+
+Variazione 1: logica nuova + gate che parte in coincidenza con lo start => coppia fissa di segnali successivi 1-3 entro 40 ns circa.
+Variazione 2: logica nuova + gate ritardato di circa 100 ns rispetto allo start
+

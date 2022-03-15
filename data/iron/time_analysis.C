@@ -25,7 +25,7 @@ void time_analysis() {
     tree->SetBranchAddress("channel", &channel);
     tree->SetBranchAddress("times", &times);
 
-    for (auto i=0; i<tree->GetEntries()-1; i++) {
+    for (auto i=0; i<tree->GetEntries()-2; i++) {
       int ch_i, ch_ii;
       double times_i, times_ii;
 
@@ -33,12 +33,14 @@ void time_analysis() {
       ch_i = channel;
       times_i = times;
 
-      tree->GetEntry(i+1);
+      tree->GetEntry(i+2);
       ch_ii = channel;
       times_ii = times;
 
-      if (ch_ii > ch_i) {
-        double dt = (times_ii - times_i) * 1e6;
+      double dt = (times_ii - times_i) * 1e6;
+
+      if ((ch_ii > ch_i) && dt <= 55.) {
+
         hist->Fill(dt);
         if (dt>= tmin1 && dt<=tmax1) entries ++;
       }
