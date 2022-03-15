@@ -89,3 +89,9 @@ Presa dati 08/03
 In totale circa 4000 eventi di stop.
 Si nota la differenza tra i dati e un esponenziale singolo risultato dal fit -> analisi per i due tipi di muoni da svolgere su due range esclusivi
 Possibile problema: mancanza di eventi nel bin [0, 0.5 us] (effetto che si vede solo su un dataset)
+
+start 3bar veto 4.75 hz
+stop 5.04 hz
+
+start 3bar 2bar veto 3.72 hz
+stop 3.99 hz
