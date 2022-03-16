@@ -1,12 +1,12 @@
 
 void time_analysis() {
 
-  double tmin1 = 0., tmax1 = 50.;
+  double tmin1 = 1.8, tmax1 = 22.5;
   double tmin2 = tmin1, tmax2 = 55.0;
 
-  int nbins = 10;
+  int nbins = 30;
 
-  auto f1 = new TFile("var2.root");
+  auto f1 = new TFile("total.root");
   auto f2 = new TFile("bkg.root");
 
   auto t1 = f1->Get<TTree>("events");
@@ -25,7 +25,7 @@ void time_analysis() {
     tree->SetBranchAddress("channel", &channel);
     tree->SetBranchAddress("times", &times);
 
-    for (auto i=0; i<tree->GetEntries()-2; i++) {
+    for (auto i=0; i<tree->GetEntries()-1; i++) {
       int ch_i, ch_ii;
       double times_i, times_ii;
 
@@ -33,7 +33,7 @@ void time_analysis() {
       ch_i = channel;
       times_i = times;
 
-      tree->GetEntry(i+2);
+      tree->GetEntry(i+1);
       ch_ii = channel;
       times_ii = times;
 
