@@ -4,7 +4,7 @@ import numpy as np
 import ROOT
 
 
-def merge_dat(filepaths, datapath, name='total.dat'):
+def merge_dat(filepaths, datapath, name='1503_1800_var2.dat'):
     finalpath = os.path.join(datapath, name)
     x = np.array([])
     for f in filepaths:
@@ -18,7 +18,7 @@ def merge_dat(filepaths, datapath, name='total.dat'):
     return finalpath
 
 
-def make_tree(filepath, datapath, name='total.root'):
+def make_tree(filepath, datapath, name='var2.root'):
     treepath = os.path.join(datapath, name)
 
     ch, t = np.genfromtxt(filepath, unpack=True, dtype=None)
@@ -40,12 +40,13 @@ def make_tree(filepath, datapath, name='total.root'):
 
 datapath = os.path.join(os.path.dirname(__file__), 'acquisitions')
 
-filenames = ['0803_1530.dat', '0803_1606.dat',
-             '0803_1635.dat', '0903_1125.dat']
+#filenames = ['0803_1530.dat', '0803_1606.dat',
+             #'0803_1635.dat', '0903_1125.dat']
 
-filepaths = [os.path.join(datapath, name) for name in filenames]
+
+filepaths = [os.path.join(datapath, '1503_1800_var2.dat')] #for name in filenames]
 rootpath = os.path.join(os.path.dirname(__file__))
 
 make_tree(merge_dat(filepaths, datapath), rootpath)
-make_tree(os.path.join(datapath, '1003_1807_bkg.dat'),
-          rootpath, name='bkg.root')
+make_tree(os.path.join(datapath, '1503_1800_var2.dat'),
+          rootpath, name='var2.root')

@@ -1,12 +1,12 @@
 
 void time_analysis() {
 
-  double tmin1 = 1.81, tmax1 = 22.5;
+  double tmin1 = 0., tmax1 = 50.;
   double tmin2 = tmin1, tmax2 = 55.0;
 
-  int nbins = 40;
+  int nbins = 10;
 
-  auto f1 = new TFile("total.root");
+  auto f1 = new TFile("var2.root");
   auto f2 = new TFile("bkg.root");
 
   auto t1 = f1->Get<TTree>("events");
@@ -64,16 +64,16 @@ void time_analysis() {
 
   //c->SetLogy();
 
-  h1->Fit(exp, "L", "", tmin1, 22.5);
-  h2->Fit(unif, "L");
+  h1->Fit(exp, "L", "", tmin1, tmax1);
+  //h2->Fit(unif, "L");
   auto e = h1->GetFunction("exp");
-  auto u = h2->GetFunction("unif");
+  //auto u = h2->GetFunction("unif");
   e->SetLineColor(kBlue);
   e->Draw("same");
-  u->SetLineColor(kRed);
-  u->Draw("same");
+  //u->SetLineColor(kRed);
+  //u->Draw("same");
   h1->Draw("E1");
-  h2->Draw("E1 same");
+  //h2->Draw("E1 same");
 
 
   /*auto legend = new TLegend(0.3, 0.3, 0.3, 0.3);
