@@ -43,8 +43,12 @@ datapath = os.path.join(os.path.dirname(__file__), 'acquisitions')
 #filenames = ['0803_1530.dat', '0803_1606.dat',
              #'0803_1635.dat', '0903_1125.dat']
 
+#filenames = ['1603_1155_doublestop.dat', '1603_1245_doublestop.dat']
 
-filepaths = [os.path.join(datapath, '1503_1800_var2.dat')] #for name in filenames]
+filenames = ['1503_1800_var2.dat']
+
+
+filepaths = [os.path.join(datapath, name) for name in filenames]
 rootpath = os.path.join(os.path.dirname(__file__))
 
 make_tree(merge_dat(filepaths, datapath), rootpath)

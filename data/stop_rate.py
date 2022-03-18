@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 counts_path = os.path.join(os.path.dirname(__file__), 'iron')
 
-w, start, stop = np.loadtxt('iron/stop_rate.txt', unpack=True)
+w, start, stop = np.loadtxt('iron/stop_rate_ir.txt', unpack=True)
 
 
 
@@ -23,7 +23,7 @@ np.savetxt(os.path.join(counts_path, '..', 'efficiencies',
 plt.title('STOP/START rate')
 plt.errorbar(w,  r, yerr=dr, ls='', fmt='.', color='black')
 plt.grid(which='both', ls='--', alpha=0.5)
-plt.xlabel('Stop/Start')
-plt.ylabel('Width [cm]')
+plt.xlabel('Width [cm]')
+plt.ylabel('Stop/Start')
 plt.savefig('iron/stop_rate.png')
 plt.show()

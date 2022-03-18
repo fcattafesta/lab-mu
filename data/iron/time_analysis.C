@@ -1,12 +1,12 @@
 
 void time_analysis() {
 
-  double tmin1 = 1.8, tmax1 = 22.5;
+  double tmin1 = 0.81, tmax1 = 1.81;
   double tmin2 = tmin1, tmax2 = 55.0;
 
-  int nbins = 30;
+  int nbins = 80;
 
-  auto f1 = new TFile("total.root");
+  auto f1 = new TFile("total_var2.root");
   auto f2 = new TFile("bkg.root");
 
   auto t1 = f1->Get<TTree>("events");
@@ -37,7 +37,7 @@ void time_analysis() {
       ch_ii = channel;
       times_ii = times;
 
-      double dt = (times_ii - times_i) * 1e6;
+      Double_t dt = (times_ii - times_i) * 1e6;
 
       if ((ch_ii > ch_i) && dt <= 55.) {
 
@@ -54,25 +54,33 @@ void time_analysis() {
 
   /*double r_fake = 0.03;
   double noise_const = 0.03 * tree_reader(t1, h1) / nbins;
-
+*/
   cout << "Eventi nel range selezionato = " << entries << endl;
-  cout << "Costante di rumore = " << noise_const << endl;
-  */
+  //cout << "Costante di rumore = " << noise_const << endl;
 
-  auto exp = new TF1("exp", "[2] + expo", tmin1, tmax1);
-  auto unif = new TF1("unif", "pol0", tmin2, tmax2);
+
+
+
+
+  auto free_mu = new TF1("free_mu", "12.06*TMath::Exp(-0.48*x)", tmin1, tmax1);
+  auto decay = new TF1("decay", "expo + [2]", tmin1, tmax1);
+  auto noise = new TF1("noise", "2.49*x/x", tmin1, tmax1);
+  //auto unif = new TF1("unif", "pol0", tmin2, tmax2);
+
+  auto tot = new TF1("tot", "decay + free_mu + noise", tmin1, tmax1);
 
   //c->SetLogy();
 
-  h1->Fit(exp, "L", "", tmin1, tmax1);
+  h1->Fit(decay, "L I R");
   //h2->Fit(unif, "L");
-  auto e = h1->GetFunction("exp");
+  auto e = h1->GetFunction("decay");
   //auto u = h2->GetFunction("unif");
   e->SetLineColor(kBlue);
   e->Draw("same");
   //u->SetLineColor(kRed);
   //u->Draw("same");
   h1->Draw("E1");
+
   //h2->Draw("E1 same");
 
 

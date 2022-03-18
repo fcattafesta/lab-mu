@@ -2,7 +2,7 @@ import numpy as np
 import pylab
 
 
-channel, t = np.loadtxt('labIF/lab-mu/data/iron/total.dat',unpack=True)
+channel, t = np.loadtxt('iron/acquisitions/doublestop.dat',unpack=True)
 
 counter=0
 j=0
