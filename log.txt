@@ -97,8 +97,8 @@ start 3bar 2bar veto 3.72 hz
 stop 3.99 hz
 
 
-Variazione 1: logica nuova + gate che parte in coincidenza con lo start => coppia fissa di segnali successivi 1-3 entro 40 ns circa.
-Variazione 2: logica nuova + gate ritardato di circa 100 ns rispetto allo start
+Variazione 1: logica "ripulita" + gate che parte in coincidenza con lo start => coppia fissa di segnali successivi 1-3 entro 40 ns circa.
+Variazione 2: logica "ripulita" + gate ritardato di circa 100 ns rispetto allo start -> tutte le analisi dati dovranno avere questo limite inferiore
 
 Il primo set di dati (var2) da 500 eventi è promettente e non mostra bump particolari.
 Col nuovo set di dati (16k eventi) si vede un bump a circa 5 ns che si vedeva coi dati acquisiti precedentemente. Serve quindi usare come segnale di STOP la coincidenza (2 3 4bar) + (5 4 3bar)
@@ -106,14 +106,22 @@ Col nuovo set di dati (16k eventi) si vede un bump a circa 5 ns che si vedeva co
 
 Presa dati 16/03
 -----------------
-Frequenza con logica di stop vecchia: 	3.915	0.3
-Frequenza con nuova logica di stop:	3.88	0.015 	=>  54 eventi l'ora 
+Frequenza con logica di stop vecchia [Hz]:	3.915	0.3
+Frequenza con nuova logica di stop [Hz]:	3.88	0.015 	=>  54 eventi l'ora
 
-Presa dati mercoledì-giovedì: rate = 0.012, in totale 1222 eventi; i dati presentano sempre delle anomalie a 4.5 e 6 us circa, ma sono molto meno rilevanti => vita media stimata entro 1 sigma, p-value ordine 10%
+Presa dati mercoledì-giovedì: STOP rate = 0.012 Hz, in totale 940 eventi nel range valido; i dati presentano sempre delle anomalie a 4.5 e 6 us circa, ma sono molto meno rilevanti => vita media stimata entro 1 sigma, p-value ordine 10%.
+Su questo set di dati si stima anche la vita media del muone legato, con un errore relativo del 24%: un numero maggiore di dati può essere d'aiuto.
+
+Parametri stimati:
+	- tau(mu+) =	2.10 +- 0.16 	us
+	- tau(mu-) =	0.189 +- 0.046	us
+	- Rapporto abbondanze mu-/mu+ = 0.15255
 
 
 
+Lab Work 17/03
+---------------
+Test con l'alluminio: misurato lo stop rate (con logica di STOP "leggera", ovvero senza richiedere coincidenze) in funzione dello spessore -> scelti 2 cm.
+Prima presa dati sempre con "stop leggero": un primo fit dei 607 eventi su tutto il range [0.1, 55] rende dei risultati (inaspettatamente?) buoni per il muone libero, mentre sembra non avere peso il contributo del muopne legato -> necessaria una presa dati più estesa.
 
-
-
-
+Presa dati nel weekend con 2 cm di alluminio e logica di stop con le coincidenze => attesi circa 6000 eventi
