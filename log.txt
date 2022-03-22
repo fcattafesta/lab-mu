@@ -125,3 +125,5 @@ Test con l'alluminio: misurato lo stop rate (con logica di STOP "leggera", ovver
 Prima presa dati sempre con "stop leggero": un primo fit dei 607 eventi su tutto il range [0.1, 55] rende dei risultati (inaspettatamente?) buoni per il muone libero, mentre sembra non avere peso il contributo del muopne legato -> necessaria una presa dati più estesa.
 
 Presa dati nel weekend con 2 cm di alluminio e logica di stop con le coincidenze => attesi circa 6000 eventi
+
+Lastra magnetizzata: due lastre di ferro da 0.5 cm poste a distanza di 3.7 cm l'una dall'altra (come funziona?)

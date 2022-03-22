@@ -6,9 +6,9 @@ void time_analysis() {
   double tmin = 0.1, tmax = 55.0;
 
   int nbins_r = 80;
-  int nbins_l = 30;
+  int nbins_l = 60;
 
-  auto file = new TFile("iron/doublestop.root");
+  auto file = new TFile("aluminum/doublestop.root");
   //auto f2 = new TFile("iron/bkg.root");
 
   auto tree = file->Get<TTree>("events");
@@ -21,15 +21,15 @@ void time_analysis() {
   //auto tree_reader = [=](TTree* tree, TH1D* hist) {
 
   int channel; Double_t times;
-  int entries = 0;
+  int random = 0;
 
   tree->SetBranchAddress("channel", &channel);
   tree->SetBranchAddress("times", &times);
 
   for (auto i=0; i<tree->GetEntries()-1; i++) {
 
-      int ch_i, ch_ii;
-      double times_i, times_ii;
+      int ch_i, ch_ii, ch_iii;
+      double times_i, times_ii, times_iii;
 
       tree->GetEntry(i);
       ch_i = channel;
@@ -39,9 +39,13 @@ void time_analysis() {
       ch_ii = channel;
       times_ii = times;
 
+      tree->GetEntry(i+2);
+      ch_iii = channel;
+      times_iii = times;
+
       Double_t dt = (times_ii - times_i) * 1e6;
 
-      if ((ch_ii > ch_i) && dt >= tmin && dt <= tmax) {
+      if ((ch_ii > ch_i) && ch_i == 1 && ch_iii <= ch_i && dt >= tmin && dt <= tmax) {
 
           if (dt < time_sep) h_bound->Fill(dt);
           if (dt > time_sep) h_free->Fill(dt);
@@ -49,8 +53,7 @@ void time_analysis() {
 
   }
 
-      //return entries;
-  //};
+  //cout << "random events" << random << endl;
 
   int entries_free = h_free->GetEntries();
   int entries_bound = h_bound->GetEntries();
@@ -83,10 +86,10 @@ void time_analysis() {
   h_free->Draw("E1");
   tot_right->SetLineColor(kBlue);
   tot_right->Draw("same");
-  decay->SetLineColor(kGreen);
-  decay->Draw("same");
-  unif->SetLineColor(kRed);
-  unif->Draw("same");
+  //decay->SetLineColor(kGreen);
+  //decay->Draw("same");
+  //unif->SetLineColor(kRed);
+  //unif->Draw("same");
 
   double n_pos_dx = entries_free*(decay->Integral(time_sep, tmax)/tot_right->Integral(time_sep, tmax));
 
@@ -102,7 +105,7 @@ void time_analysis() {
   cout << p0_1 << endl;
   //double n_pos_dx = 298.15;
 
-  char * expo_const = Form("%f*TMath::Exp(-0.4755*x)", p0_1);
+  char * expo_const = Form("%f*TMath::Exp(-0.4749*x)", p0_1);
   //char * expo_slope = Form("*TMath::Exp(%f*x)", p1);
   char * backg_const = Form("%f", p2_1);
 
@@ -115,7 +118,7 @@ void time_analysis() {
 
   auto tot_left = new TF1("tot_left", "bound_mu + free_mu + unif_1", tmin, time_sep);
 
-  auto c2 = new TCanvas("c", "c");
+  auto c2 = new TCanvas("c2", "c2");
   c2->cd();
   //c->SetLogy();
 
