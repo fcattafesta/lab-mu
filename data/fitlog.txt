@@ -1,0 +1,22 @@
+
+Processing time_analysis.C...
+ FCN=34.146 FROM MIGRAD    STATUS=CONVERGED     196 CALLS         197 TOTAL
+                     EDM=2.58424e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  p0           6.88672e+00   7.57242e-02   1.23741e-04  -1.33658e-03
+   2  p1          -5.01125e-01   1.98949e-02   3.20302e-05  -3.26686e-03
+   3  p2           1.01599e+01   3.98678e-01   1.56184e-03   3.33130e-05
+                               ERR DEF= 0.5
+Decadimenti del muone libero (right) = 1192.21
+41.7197
+ FCN=150.068 FROM MIGRAD    STATUS=CONVERGED     114 CALLS         115 TOTAL
+                     EDM=7.08359e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     4.44714e+00   2.39984e-01   7.08029e-04  -4.03058e-04
+   2  Slope       -4.87309e+00   1.00919e+00   2.97215e-03  -1.34210e-05
+                               ERR DEF= 0.5
+Rapporto abbondanze n-/n+ = 0.134831
+Mu+ totali = 2848.83
+Mu- totali = 384.11

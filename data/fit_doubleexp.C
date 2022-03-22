@@ -1,6 +1,6 @@
 void fit_doubleexp() {
 
-  double tmin = 0.1, tmax = 6;
+  double tmin = 0.3, tmax = 20;
 
   int nbins = 80;
 
@@ -43,20 +43,22 @@ void fit_doubleexp() {
 
   int entries = h->GetEntries();
 
+  auto c1 = new TCanvas("c1", "c1");
 
   auto decay = new TF1("decay", "expo + expo + [4]", tmin, tmax);
+  //auto decay = new TF1("decay", "[0]*exp(x*[1]) + [2]*exp(x*[3]) + [4]", tmin, tmax);
 
-  decay->SetParLimits(0, 3.0, 4.0);
+  /*decay->SetParLimits(0, 30, 40);
   decay->SetParLimits(1, -5.0, -4.0);
-  decay->SetParLimits(2, 3.0, 5.0);
+  decay->SetParLimits(2, 30, 50);
   decay->SetParLimits(3, -2.0, -1.0);
   decay->SetParLimits(4, 5.0, 10.0);
-  //decay->FixParameter(3, -1.13);
+  */
+  decay->SetParameters(6, -0.45, 4, -1.1, 10);
+  //decay->FixParameter(1, -0.45);  decay->FixParameter(3, -1.1);
 
-  auto c1 = new TCanvas("c1", "c1");
-  c1->cd();
-
-  h->Fit(decay, "L I R");
+  h->Fit(decay, "L I R B ");
   h->Draw("E1");
+
   gStyle->SetOptFit(1111);
 }
