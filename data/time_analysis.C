@@ -1,31 +1,33 @@
 
 void time_analysis() {
 
-  double tmin1 = 0.1, tmax1 = 1.81;
-  double tmin2 = tmin1, tmax2 = 55.0;
 
-  int nbins = 30;
+  double time_sep = 1.8;
+  double tmin = 0.1, tmax = 55.0;
 
-  auto f1 = new TFile("iron/doublestop.root");
-  auto f2 = new TFile("iron/bkg.root");
+  int nbins_r = 80;
+  int nbins_l = 30;
 
-  auto t1 = f1->Get<TTree>("events");
-  auto t2 = f2->Get<TTree>("events");
+  auto file = new TFile("iron/doublestop.root");
+  //auto f2 = new TFile("iron/bkg.root");
 
-  auto h1 = new TH1D("signal", ";#Delta t [#mus]; ", nbins, tmin1, tmax1);
-  auto h2 = new TH1D("background", ";#Delta t [#mus]; ", nbins, tmin2, tmax2);
+  auto tree = file->Get<TTree>("events");
+  //auto t2 = f2->Get<TTree>("events");
 
-  auto c = new TCanvas("c", "c");
+  auto h_bound = new TH1D("bound_mu", ";#Delta t [#mus]; ", nbins_l, tmin, time_sep);
+  auto h_free = new TH1D("free_mu", ";#Delta t [#mus]; ", nbins_r, time_sep, tmax);
 
-  auto tree_reader = [=](TTree* tree, TH1D* hist) {
 
-    int channel; Double_t times;
-    int entries = 0;
+  //auto tree_reader = [=](TTree* tree, TH1D* hist) {
 
-    tree->SetBranchAddress("channel", &channel);
-    tree->SetBranchAddress("times", &times);
+  int channel; Double_t times;
+  int entries = 0;
 
-    for (auto i=0; i<tree->GetEntries()-1; i++) {
+  tree->SetBranchAddress("channel", &channel);
+  tree->SetBranchAddress("times", &times);
+
+  for (auto i=0; i<tree->GetEntries()-1; i++) {
+
       int ch_i, ch_ii;
       double times_i, times_ii;
 
@@ -39,86 +41,101 @@ void time_analysis() {
 
       Double_t dt = (times_ii - times_i) * 1e6;
 
-      if ((ch_ii > ch_i) && dt >= 0.1 && dt <= 55.) {
+      if ((ch_ii > ch_i) && dt >= tmin && dt <= tmax) {
 
-        hist->Fill(dt);
-        if (dt>= tmin1 && dt<=tmax1) entries ++;
+          if (dt < time_sep) h_bound->Fill(dt);
+          if (dt > time_sep) h_free->Fill(dt);
       }
-    }
-      return entries;
-  };
 
-  int entries = tree_reader(t1, h1);
+  }
 
-  int bkg_entries = tree_reader(t2, h2);
+      //return entries;
+  //};
 
-  cout << "Eventi nel range selezionato = " << entries << endl;
+  int entries_free = h_free->GetEntries();
+  int entries_bound = h_bound->GetEntries();
+
+  //int bkg_entries = tree_reader(t2, h2);
+
+  //cout << "Eventi nel range selezionato = " << entries << endl;
 
 
   // ----- ANALISI MUONE LIBERO ------------
 
-/*
-  auto decay = new TF1("decay", "expo", tmin1, tmax1);
+
+  auto decay = new TF1("decay", "expo", time_sep, tmax);
   //auto noise = new TF1("noise", "gaus", 4.1, 5.5);
-  auto unif = new TF1("unif", "pol1", tmin1, tmax1);
+  auto unif = new TF1("unif", "pol1", time_sep, tmax);
 
-  auto tot = new TF1("tot", "expo + [2]", tmin1, tmax1);
+  auto tot_right = new TF1("tot_right", "expo + [2]", time_sep, tmax);
 
+  auto c1 = new TCanvas("c", "c");
+  c1->cd();
   //c->SetLogy();
 
-  h1->Fit(tot, "L I R");
+  h_free->Fit(tot_right, "L I R");
   //h2->Fit(unif, "L");
 
-  double p0 = tot->GetParameter(0), p1 = tot->GetParameter(1), p2 = tot->GetParameter(2);
+  double p0 = tot_right->GetParameter(0), p1 = tot_right->GetParameter(1), p2 = tot_right->GetParameter(2);
   decay->SetParameters(p0, p1);
   unif->SetParameters(p2, 0);
 
-  h1->Draw("E1");
-  auto e = h1->GetFunction("tot");
-  e->SetLineColor(kBlue);
-  e->Draw("same");
+  h_free->Draw("E1");
+  tot_right->SetLineColor(kBlue);
+  tot_right->Draw("same");
   decay->SetLineColor(kGreen);
   decay->Draw("same");
   unif->SetLineColor(kRed);
   unif->Draw("same");
 
-  double free_mu_events = entries*(decay->Integral(1.81, 55.)/tot->Integral(1.81, 55.));
+  double n_pos_dx = entries_free*(decay->Integral(time_sep, tmax)/tot_right->Integral(time_sep, tmax));
 
-  cout << "Decadimenti del muone libero [1.81, 55.0] = " << free_mu_events << endl;
+  cout << "Decadimenti del muone libero (right) = " << n_pos_dx << endl;
 
-*/
 
 
   // ----- ANALISI MUONE LEGATO ------------
-  double n_pos_dx = 298.15;
+
+  //la funzione del decadimento libero va "portata indietro" di 1.71? In quel caso le cose peggiorano.
+  double p0_1 = TMath::Exp(p0) *((time_sep-tmin)/nbins_l)/((tmax-time_sep)/nbins_r);
+  double p2_1 = p2*((time_sep-tmin)/nbins_l)/((tmax-time_sep)/nbins_r);
+  cout << p0_1 << endl;
+  //double n_pos_dx = 298.15;
+
+  char * expo_const = Form("%f*TMath::Exp(-0.4755*x)", p0_1);
+  //char * expo_slope = Form("*TMath::Exp(%f*x)", p1);
+  char * backg_const = Form("%f", p2_1);
 
   //Funzioni da sommare a quella di fit, usando 30 bin nel range [0.1, 1.81]:
-  auto free_mu = new TF1("free_mu", "19.1148*TMath::Exp(-0.4755*x)", tmin1, tmax1);
-  auto unif = new TF1("unif", "0.18409*x/x", tmin1, tmax1);
+  auto free_mu = new TF1("free_mu", expo_const, tmin, time_sep);
+  auto unif_1 = new TF1("unif_1", backg_const, tmin, time_sep);
 
-  auto bound_mu = new TF1("bound_mu", "expo", tmin1, tmax1);
+  auto bound_mu = new TF1("bound_mu", "expo", tmin, time_sep);
 
 
-  auto tot = new TF1("tot", "bound_mu + free_mu + unif", tmin1, tmax1);
+  auto tot_left = new TF1("tot_left", "bound_mu + free_mu + unif_1", tmin, time_sep);
 
+  auto c2 = new TCanvas("c", "c");
+  c2->cd();
   //c->SetLogy();
 
-  h1->Fit(tot, "L I R");
+  h_bound->Fit(tot_left, "L I R");
 
-  bound_mu->SetParameters(tot->GetParameter(0), tot->GetParameter(1));
+  bound_mu->SetParameters(tot_left->GetParameter(0), tot_left->GetParameter(1));
 
-  h1->Draw("E1");
-  tot->SetLineColor(kBlue);   tot->Draw("same");
+  h_bound->Draw("E1");
+  tot_left->SetLineColor(kBlue);   tot_left->Draw("same");
   bound_mu->SetLineColor(kGreen); bound_mu->Draw("same");
   free_mu->SetLineColor(kOrange);  free_mu->Draw("same");
-  unif->SetLineColor(kRed);  unif->Draw("same");
+  unif_1->SetLineColor(kRed);  unif_1->Draw("same");
 
 
-  double n_neg = entries*(bound_mu->Integral(0.1, 1.81)/tot->Integral(0.1, 1.81));
-  double n_pos_sx = entries*(free_mu->Integral(0.1, 1.81)/tot->Integral(0.1, 1.81));
+  double n_neg = entries_bound*(bound_mu->Integral(tmin, time_sep)/tot_left->Integral(tmin, time_sep));
+  double n_pos_sx = entries_bound*(free_mu->Integral(tmin, time_sep)/tot_left->Integral(tmin, time_sep));
 
   cout << "Rapporto abbondanze n-/n+ = " <<  n_neg/(n_pos_sx + n_pos_dx) << endl;
   cout << "Mu+ totali = " <<  n_pos_sx + n_pos_dx << endl;
+  cout << "Mu- totali = " <<  n_neg << endl;
 
 
 
