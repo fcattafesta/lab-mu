@@ -2,10 +2,10 @@
 void time_analysis() {
 
 
-  double time_sep = 1.8;
-  double tmin = 0.1, tmax = 55.0;
+  double time_sep = 5.136;
+  double tmin = 0.25, tmax = 55.0;
 
-  int nbins_r = 80;
+  int nbins_r = 60;
   int nbins_l = 60;
 
   auto file = new TFile("aluminum/doublestop.root");
@@ -72,7 +72,7 @@ void time_analysis() {
 
   auto tot_right = new TF1("tot_right", "expo + [2]", time_sep, tmax);
 
-  auto c1 = new TCanvas("c", "c");
+  auto c1 = new TCanvas("c1", "c1");
   c1->cd();
   //c->SetLogy();
 
@@ -86,10 +86,13 @@ void time_analysis() {
   h_free->Draw("E1");
   tot_right->SetLineColor(kBlue);
   tot_right->Draw("same");
+
   //decay->SetLineColor(kGreen);
   //decay->Draw("same");
   //unif->SetLineColor(kRed);
   //unif->Draw("same");
+
+  gStyle->SetOptFit(1111);
 
   double n_pos_dx = entries_free*(decay->Integral(time_sep, tmax)/tot_right->Integral(time_sep, tmax));
 
@@ -105,7 +108,7 @@ void time_analysis() {
   cout << p0_1 << endl;
   //double n_pos_dx = 298.15;
 
-  char * expo_const = Form("%f*TMath::Exp(-0.4749*x)", p0_1);
+  char * expo_const = Form("%f*TMath::Exp(-0.458*x)", p0_1);
   //char * expo_slope = Form("*TMath::Exp(%f*x)", p1);
   char * backg_const = Form("%f", p2_1);
 
@@ -132,6 +135,7 @@ void time_analysis() {
   free_mu->SetLineColor(kOrange);  free_mu->Draw("same");
   unif_1->SetLineColor(kRed);  unif_1->Draw("same");
 
+  gStyle->SetOptFit(1111);
 
   double n_neg = entries_bound*(bound_mu->Integral(tmin, time_sep)/tot_left->Integral(tmin, time_sep));
   double n_pos_sx = entries_bound*(free_mu->Integral(tmin, time_sep)/tot_left->Integral(tmin, time_sep));

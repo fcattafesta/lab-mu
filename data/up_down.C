@@ -6,7 +6,7 @@ void up_down() {
   int nbins_u = 80;
   int nbins_d = 80;
 
-  auto file = new TFile("aluminum/doublestop.root");
+  auto file = new TFile("mag/mag2.root");
 
   auto tree = file->Get<TTree>("events");
 
@@ -45,6 +45,16 @@ void up_down() {
       }
 
   }
+
+  double n_up = h_up->GetEntries()*1.;
+  double n_down = h_down->GetEntries()*1.;
+
+  double R = n_up/n_down;
+  double dR = (2/(n_up+n_down))*TMath::Sqrt(n_up*n_down/(n_up+n_down));
+
+
+  cout << "Rapporto up/down = " << R << " +- " << dR << endl;
+  cout << "Eventi totali = " << n_up+n_down << endl;
 
   auto c1 = new TCanvas("c1", "c1");
   h_up->Draw("E1");
