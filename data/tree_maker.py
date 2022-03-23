@@ -40,10 +40,11 @@ def make_tree(filepath, datapath, name):
 
 datapath = os.path.join(os.path.dirname(__file__), 'mag')
 
-#filenames = ['0803_1530.dat', '0803_1606.dat',
-#'0803_1635.dat', '0903_1125.dat']
+# filenames = ['0803_1530.dat', '0803_1606.dat',
+# '0803_1635.dat', '0903_1125.dat']
 
-#filenames = ['1603_1155_doublestop.dat', '1603_1245_doublestop.dat']
+filenames = ['1603_1155_doublestop.dat',
+             '1603_1245_doublestop.dat', '2203_1845.dat']
 
 filenames = ['2203_1746_mag.dat']
 
