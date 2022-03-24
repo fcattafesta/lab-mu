@@ -12,13 +12,6 @@ w, start, stop = np.loadtxt(counts_path, unpack=True)
 r = (stop[:])
 dr = np.sqrt(stop[:])
 
-'''
-X = np.stack(w, r, dr], axis=1)
-
-np.savetxt(os.path.join(counts_path, '..', 'efficiencies',
-           'working_efficiencies.txt'), X, fmt='%.3f')
-'''
-
 plt.title('STOP/START rate')
 plt.errorbar(w,  r, yerr=dr, ls='', fmt='.', color='black')
 plt.grid(which='both', ls='--', alpha=0.5)

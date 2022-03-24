@@ -53,7 +53,10 @@ void up_down() {
   double dR = (2/(n_up+n_down))*TMath::Sqrt(n_up*n_down/(n_up+n_down));
 
 
-  cout << "Rapporto up/down = " << R << " +- " << dR << endl;
+  double x = (n_up - n_down) / (n_up + n_down);
+  double dx = 0;
+
+  cout << "Asimmetria: " << x << " +- " << dx << endl;
   cout << "Eventi totali = " << n_up+n_down << endl;
 
   auto c1 = new TCanvas("c1", "c1");
