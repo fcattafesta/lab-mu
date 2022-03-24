@@ -13,11 +13,11 @@ double fitFunc(double* x, double* par) {
 
 void fit_doubleexp() {
 
-  double tmin = 0.2, tmax = 25;
+  double tmin = 0.16, tmax = 22.5;
 
-  int nbins = 400;
+  int nbins = 425;
 
-  auto file = new TFile("iron/doublestop.root");
+  auto file = new TFile("doublestop.root");
 
   auto tree = file->Get<TTree>("events");
 
@@ -63,7 +63,7 @@ void fit_doubleexp() {
   //decay->SetParameters(1, 1, 1, 1, 1);
   //h->Fit(decay, "L I R B 0 ");
 
-  decay->SetParameters(10, 300, 2.2, 200, 0.2);
+  decay->SetParameters(0.5, 75, 2.197, 150, 0.2);
   // decay->FixParameter(2, 4);
 
   h->Fit(decay, "L R B I ");
