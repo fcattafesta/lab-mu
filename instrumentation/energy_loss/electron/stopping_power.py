@@ -6,8 +6,8 @@ dirpath = os.path.dirname(__file__)
 figpath = os.path.join(dirpath, '..', '..', 'figures',
                        'electron_stop_power.png')
 
-label = ['carbon', 'aluminum', 'iron', 'lead', 'scintillator']
-density = np.array([2.267, 2.7, 7.874, 11.340, 0.9 * 0.997])
+label = ['carbon', 'aluminum', 'iron', 'lead', 'scintillator', 'plywood']
+density = np.array([2.267, 2.7, 7.874, 11.340, 0.9 * 0.997, 0.5])
 
 range = np.array([])
 

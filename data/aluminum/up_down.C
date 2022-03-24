@@ -5,7 +5,6 @@ void up_down() {
 
   int nbins_u = 80;
   int nbins_d = 80;
-  int nbins_x = 10;
 
   auto file = new TFile("doublestop.root");
 
@@ -13,8 +12,6 @@ void up_down() {
 
   auto h_up = new TH1D("up_mu", ";#Delta t [#mus]; ", nbins_u, tmin, tmax);
   auto h_down = new TH1D("down_mu", ";#Delta t [#mus]; ", nbins_d, tmin, tmax);
-  auto h_x = new TH1D("asymmetry", ";#Delta t [#mus]; ", nbins_x, tmin, tmax);
-  auto h_tot = new TH1D("total", ";#Delta t [#mus]; ", nbins_x, tmin, tmax);
 
   int channel; Double_t times;
 
@@ -73,12 +70,9 @@ void up_down() {
   cout << "Eventi totali = " << n_up+n_down << endl;
 
   auto c1 = new TCanvas("c1", "c1");
-  h_x->Add(h_up, h_down, 1.0, -1.0);
-  h_tot->Add(h_up, h_down, 1.0, 1.0);
-  h_x->Divide(h_x, h_tot, 1.0, 1.0);
-  //h_up->Draw("E1");
+  h_up->Draw("E1");
   h_x->Draw("E1");
   auto c2 = new TCanvas("c2", "c2");
-  //h_down->Draw("E1");
+  h_down->Draw("E1");
 
 }
