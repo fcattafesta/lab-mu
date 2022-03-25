@@ -21,7 +21,7 @@ void fit_doubleexp() {
 
   auto tree = file->Get<TTree>("events");
 
-  auto h = new TH1D("h", ";#Delta t [#mus]; ", nbins, tmin, tmax);
+  auto h = new TH1D("Aluminum", ";#Delta t [#mus]; ", nbins, tmin, tmax);
 
   int channel; Double_t times;
 
@@ -57,6 +57,7 @@ void fit_doubleexp() {
   int entries = h->GetEntries();
 
   auto c1 = new TCanvas("c1", "c1");
+  c1->SetGrid();
 
   auto decay = new TF1("decay", fitFunc, tmin, tmax, 5);
 
@@ -69,7 +70,7 @@ void fit_doubleexp() {
   h->Fit(decay, "L R B I ");
   //h->SetMarkerStyle(21);
   //h->SetMarkerSize(0.5);
-  h->Draw("E1");
+  h->Draw("E");
 
   gStyle->SetOptFit(1111);
 }
