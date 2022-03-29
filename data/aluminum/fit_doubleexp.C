@@ -74,5 +74,7 @@ void fit_doubleexp() {
 
   gStyle->SetOptFit(1111);
   c1->SaveAs("figures/final.eps");
+  c1->SaveAs("figures/final.png");
+
 
 }
