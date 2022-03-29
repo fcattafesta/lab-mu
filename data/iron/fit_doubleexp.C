@@ -73,4 +73,6 @@ void fit_doubleexp() {
   h->Draw("E");
 
   gStyle->SetOptFit(1111);
+
+  c1->SaveAs("figures/final.eps");
 }

@@ -4,7 +4,7 @@ import numpy as np
 datapath = os.path.join(os.path.dirname(__file__), 'counts')
 eff_path = os.path.join(datapath, '..', 'efficiencies')
 
-id, eff_old, err_eff_old, _, _, _ = np.loadtxt(
+_, eff_old, err_eff_old, _ = np.loadtxt(
     os.path.join(eff_path, 'working_efficiencies.txt'), unpack=True)
 _, new_triple, new_double = np.loadtxt(
     os.path.join(datapath, 'new_coinc.txt'), unpack=True)

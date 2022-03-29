@@ -49,11 +49,11 @@ void up_down() {
   double n_up = h_up->GetEntries()*1.;
   double n_down = h_down->GetEntries()*1.;
 
-  double eff_up = 0.893;
-  double deff_up = 0.015;
+  double eff_up = 0.886;
+  double deff_up = 0.008;
 
-  double eff_down = 0.768;
-  double deff_down = 0.042;
+  double eff_down = 0.737;
+  double deff_down = 0.012;
 
   n_up = n_up / eff_up;
   n_down = n_down / eff_down;
