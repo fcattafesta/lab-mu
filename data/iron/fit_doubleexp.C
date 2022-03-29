@@ -13,9 +13,9 @@ double fitFunc(double* x, double* par) {
 
 void fit_doubleexp() {
 
-  double tmin = 0.16, tmax = 22.5;
+  double tmin = 0.15, tmax = 50.15;
 
-  int nbins = 425;
+  int nbins = 625;
 
   auto file = new TFile("doublestop.root");
 

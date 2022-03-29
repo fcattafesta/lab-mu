@@ -13,11 +13,11 @@ double fitFunc(double* x, double* par) {
 
 void fit_doubleexp() {
 
-  double tmin = 0.2, tmax = 25;
+  double tmin = 0.15, tmax = 50.15;
 
-  int nbins = 400;
+  int nbins = 625;
 
-  auto file = new TFile("aluminum/doublestop.root");
+  auto file = new TFile("doublestop.root");
 
   auto tree = file->Get<TTree>("events");
 

@@ -6,7 +6,7 @@ void up_down() {
   int nbins_u = 80;
   int nbins_d = 80;
 
-  auto file = new TFile("doublestop.root");
+  auto file = new TFile("asymmetry.root");
 
   auto tree = file->Get<TTree>("events");
 
@@ -49,11 +49,11 @@ void up_down() {
   double n_up = h_up->GetEntries()*1.;
   double n_down = h_down->GetEntries()*1.;
 
-  double eff_up = (0.968 * 0.930);
-  double deff_up = TMath::Sqrt(pow(0.005/0.968, 2) + pow(0.007/0.930, 2));
+  double eff_up = 0.893;
+  double deff_up = 0.015;
 
-  double eff_down = (0.92 * 0.856);
-  double deff_down = TMath::Sqrt(pow(0.01/0.92, 2) + pow(0.009/0.856, 2));
+  double eff_down = 0.768;
+  double deff_down = 0.042;
 
   n_up = n_up / eff_up;
   n_down = n_down / eff_down;
