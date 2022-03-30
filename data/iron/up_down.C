@@ -66,7 +66,8 @@ void up_down() {
   double dx_eff = (2/pow(n_up+n_down, 2))*TMath::Sqrt(pow(n_down * dn_up, 2) + pow(n_up *dn_down, 2));
 
   double dx = TMath::Sqrt(pow(dx_bin, 2) + pow(dx_eff, 2));
-
+  cout << "stat" << dx_bin << endl;
+  cout << "syst" << dx_eff << endl;
   cout << "Asimmetria: " << x << " +- " << dx << endl;
   cout << "Eventi totali = " << n_up+n_down << endl;
 
