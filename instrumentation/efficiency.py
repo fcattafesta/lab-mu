@@ -14,7 +14,7 @@ counts_path = os.path.join(os.path.dirname(__file__), 'counts')
 
 #Numero coincidenze doppie e triple
 single = np.loadtxt(os.path.join(counts_path, 'single_rate.txt'))/time
-coinc = np.loadtxt(os.path.join(counts_path, 'coincidences.txt'))/time
+coinc = np.loadtxt(os.path.join(counts_path, 'coincidences.txt'))
 
 
 #Frequenza doppie casuali
