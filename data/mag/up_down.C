@@ -1,10 +1,10 @@
 void up_down() {
 
 
-  double tmin = 0.1, tmax = 30;
+  double tmin = 0.15, tmax = 6;
 
-  int nbins_u = 30;
-  int nbins_d = 15;
+  int nbins_u = 10;
+  int nbins_d = nbins_u;
 
   auto file = new TFile("mag.root");
 
@@ -80,7 +80,6 @@ void up_down() {
     err_x[i-1] = dx;
     t[i-1] = h_up->GetBinCenter(i);
     err_t[i-1] = h_up->GetBinWidth(i) * 0.5;
-    cout << "Asymmetry: " << x_t[i-1] <<endl;
     }
   }
   cout << h_up->GetBinContent(8) << endl;
@@ -92,19 +91,23 @@ void up_down() {
   auto c1 = new TCanvas();
 
   auto func = new TF1("func", "[0] + [1]*sin([2]*x + [3])", tmin, tmax);
-  func->SetParameters(-0.07, 0.2, 1.8, 1.7);
+  func->SetParameters(-0.07, 1, 1.7, 1.7);
   c1->SetGrid();
 
-  for (auto i=0; i<nbins_u; i++) {
-    if (x_t[i] == 58) {
+  auto g_x = new TGraphErrors();
+  g_x->SetTitle("Asymmetry; #Deltat [#mus];");
 
+  for (auto i=0; i<nbins_u; i++) {
+    auto n = g_x->GetN();
+    if (x_t[i] != 58) {
+      g_x->AddPoint(t[i], x_t[i]);
+      g_x->SetPointError(n, err_t[i], err_x[i]);
     }
   }
 
-  auto g_x = new TGraphErrors(nbins_u, t, x_t, err_t, err_x);
-  g_x->SetTitle("Asymmetry; #Deltat [#mus];");
   g_x->Fit(func, "");
   g_x->Draw("PA");
+  g_x->SetMarkerStyle(21);
   gStyle->SetOptFit(1111);
 
 }
