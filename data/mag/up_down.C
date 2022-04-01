@@ -1,9 +1,9 @@
 void up_down() {
 
 
-  double tmin = 0.15, tmax = 6;
+  double tmin = 0.1, tmax = 10;
 
-  int nbins_u = 10;
+  int nbins_u = 20;
   int nbins_d = nbins_u;
 
   auto file = new TFile("mag.root");
@@ -86,12 +86,13 @@ void up_down() {
   cout << h_down->GetBinContent(8) << endl;
   cout << "Up entries: " << h_up->GetEntries() <<endl;
   cout << "Down entries: " << h_down->GetEntries() <<endl;
-  cout << "Up entries: " << h_down->GetEntries() + h_up->GetEntries() <<endl;
+  cout << "Tot entries: " << h_down->GetEntries() + h_up->GetEntries() <<endl;
 
   auto c1 = new TCanvas();
 
-  auto func = new TF1("func", "[0] + [1]*sin([2]*x + [3])", tmin, tmax);
-  func->SetParameters(-0.07, 1, 1.7, 1.7);
+  auto func = new TF1("func", "[0] + [1]*cos([2]*x)", tmin, tmax);
+  auto cte = new TF1("const", "pol0", tmin, tmax);
+  func->SetParameters(-0.07, 1, 1.7);
   c1->SetGrid();
 
   auto g_x = new TGraphErrors();
@@ -105,7 +106,7 @@ void up_down() {
     }
   }
 
-  g_x->Fit(func, "");
+  g_x->Fit(cte, "");
   g_x->Draw("PA");
   g_x->SetMarkerStyle(21);
   gStyle->SetOptFit(1111);
