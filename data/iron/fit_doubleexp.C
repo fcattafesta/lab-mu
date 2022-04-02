@@ -77,4 +77,12 @@ void fit_doubleexp() {
   c1->SaveAs("figures/final.eps");
   c1->SaveAs("figures/final.png");
 
+  double a1 = decay->GetParameter(1), tau1 = decay->GetParameter(2), a2 = decay->GetParameter(3), tau2 = decay->GetParameter(4);
+  double da1 = decay->GetParError(1), dtau1 = decay->GetParError(2), da2 = decay->GetParError(3), dtau2 = decay->GetParError(4);
+
+  double x = a2*tau2/(a1*tau1);
+  double dx = x*((da1/a1) + (dtau1/tau1) + (da2/a2) + (dtau2/tau2));
+
+  cout << "Rapporto abbondanze = " << x << " +- " << dx <<endl;
+
 }

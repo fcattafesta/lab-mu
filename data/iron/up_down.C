@@ -1,18 +1,19 @@
 void up_down() {
 
 
-  double tmin = 0.1, tmax = 55.0;
+  double tmin = 0.1, tmax = 10;
 
-  int nbins_u = 80;
-  int nbins_d = 80;
+  int nbins_u = 15;
+  int nbins_d = nbins_u;
 
   auto file = new TFile("asymmetry.root");
+
+
 
   auto tree = file->Get<TTree>("events");
 
   auto h_up = new TH1D("up_mu", ";#Delta t [#mus]; ", nbins_u, tmin, tmax);
   auto h_down = new TH1D("down_mu", ";#Delta t [#mus]; ", nbins_d, tmin, tmax);
-
 
   int channel; Double_t times;
 
@@ -46,34 +47,83 @@ void up_down() {
 
   }
 
-  double n_up = h_up->GetEntries()*1.;
-  double n_down = h_down->GetEntries()*1.;
-
   double eff_up = 0.886;
   double deff_up = 0.008;
 
   double eff_down = 0.737;
   double deff_down = 0.012;
 
-  n_up = n_up / eff_up;
-  n_down = n_down / eff_down;
+  double x_t[nbins_u], err_x[nbins_u], t[nbins_u], err_t[nbins_u];
 
-  double dn_up = (n_up / pow(eff_up, 2) ) * deff_up;
-  double dn_down = (n_down / pow(eff_down, 2)) * deff_down;
+  for (auto i=1; i<=nbins_u; i++) {
+    auto n_up = h_up->GetBinContent(i);
+    auto n_down = h_down->GetBinContent(i);
 
-  double x = (n_up - n_down) / (n_up + n_down);
-  double dx_bin = (2/(n_up+n_down))*TMath::Sqrt(n_up*n_down/(n_up+n_down));
-  double dx_eff = (2/pow(n_up+n_down, 2))*TMath::Sqrt(pow(n_down * dn_up, 2) + pow(n_up *dn_down, 2));
+    if (n_up==0 || n_down==0) {
+      x_t[i-1] = 58;
+      err_x[i-1] = 58;
+      t[i-1] = h_up->GetBinCenter(i);
+      err_t[i-1] = h_up->GetBinWidth(i) * 0.5;
+    }
 
-  double dx = TMath::Sqrt(pow(dx_bin, 2) + pow(dx_eff, 2));
-  cout << "stat" << dx_bin << endl;
-  cout << "syst" << dx_eff << endl;
-  cout << "Asimmetria: " << x << " +- " << dx << endl;
-  cout << "Eventi totali = " << n_up+n_down << endl;
+    else {
+    n_up = n_up / eff_up;
+    n_down = n_down / eff_down;
 
-  auto c1 = new TCanvas("c1", "c1");
-  h_up->Draw("E1");
-  auto c2 = new TCanvas("c2", "c2");
-  h_down->Draw("E1");
+    double dn_up = (n_up / pow(eff_up, 2) ) * deff_up;
+    double dn_down = (n_down / pow(eff_down, 2)) * deff_down;
+
+    double x = (n_up - n_down) / (n_up + n_down);
+    double dx_bin = (2/(n_up+n_down))*TMath::Sqrt(n_up*n_down/(n_up+n_down));
+    double dx_eff = (2/pow(n_up+n_down, 2))*TMath::Sqrt(pow(n_down * dn_up, 2) + pow(n_up *dn_down, 2));
+    double dx = TMath::Sqrt(pow(dx_bin, 2) + pow(dx_eff, 2));
+
+    x_t[i-1] = x;
+    err_x[i-1] = dx;
+    t[i-1] = h_up->GetBinCenter(i);
+    err_t[i-1] = h_up->GetBinWidth(i) * 0.5;
+    }
+  }
+  cout << h_up->GetBinContent(8) << endl;
+  cout << h_down->GetBinContent(8) << endl;
+  cout << "Up entries: " << h_up->GetEntries() <<endl;
+  cout << "Down entries: " << h_down->GetEntries() <<endl;
+  cout << "Tot entries: " << h_down->GetEntries() + h_up->GetEntries() <<endl;
+
+  auto c1 = new TCanvas();
+
+  auto func = new TF1("func", "[0] + [1]*cos([2]*x)", tmin, tmax);
+  auto cte = new TF1("const", "pol0", tmin, tmax);
+  func->SetParameters(0., 1, 1.7);
+  c1->SetGrid();
+
+  auto g_x = new TGraphErrors();
+  g_x->SetTitle("Asymmetry; #Deltat [#mus];");
+
+  for (auto i=0; i<nbins_u; i++) {
+    auto n = g_x->GetN();
+    if (x_t[i] != 58) {
+      g_x->AddPoint(t[i], x_t[i]);
+      g_x->SetPointError(n, err_t[i], err_x[i]);
+    }
+  }
+
+  g_x->Fit(func);
+  g_x->Draw("PA");
+  g_x->SetMarkerStyle(21);
+  gStyle->SetOptFit(1111);
+
+
+
+ofstream newfile;
+newfile.open("Asymmetry_iron.txt");
+newfile << "#time    #asymm" << "\n";
+for (int idx=0; idx < nbins_u ;idx++) {
+newfile << t[idx] << "    " << x_t[idx] << "\n"; //write to file
+}
+
+newfile.close();
+
+
 
 }

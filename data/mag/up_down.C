@@ -3,10 +3,11 @@ void up_down() {
 
   double tmin = 0.1, tmax = 10;
 
-  int nbins_u = 20;
+  int nbins_u = 15;
   int nbins_d = nbins_u;
 
   auto file = new TFile("mag.root");
+
 
   auto tree = file->Get<TTree>("events");
 
@@ -92,7 +93,7 @@ void up_down() {
 
   auto func = new TF1("func", "[0] + [1]*cos([2]*x)", tmin, tmax);
   auto cte = new TF1("const", "pol0", tmin, tmax);
-  func->SetParameters(-0.07, 1, 1.7);
+  func->SetParameters(0., 1, 1.7);
   c1->SetGrid();
 
   auto g_x = new TGraphErrors();
@@ -106,9 +107,23 @@ void up_down() {
     }
   }
 
-  g_x->Fit(cte, "");
+  g_x->Fit(func);
   g_x->Draw("PA");
   g_x->SetMarkerStyle(21);
   gStyle->SetOptFit(1111);
+
+
+
+ofstream newfile;
+newfile.open("Asymmetry_mag.txt");
+newfile << "#time    #asymm" << "\n";
+
+for (int idx=0; idx < nbins_u ;idx++) {
+newfile << t[idx] << "    " << x_t[idx] << "\n"; //write to file
+}
+
+newfile.close();
+
+
 
 }
