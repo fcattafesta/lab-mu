@@ -21,7 +21,7 @@ void fit_doubleexp() {
 
   auto tree = file->Get<TTree>("events");
 
-  auto h = new TH1D("Aluminum", ";#Delta t [#mus]; ", nbins, tmin, tmax);
+  auto h = new TH1D("Aluminum", "Aluminum;#Deltat [#mus]; ", nbins, tmin, tmax);
 
   int channel; Double_t times;
 
@@ -57,6 +57,9 @@ void fit_doubleexp() {
   int entries = h->GetEntries();
 
   auto c1 = new TCanvas("c1", "c1");
+  auto c2 = new TCanvas("c2", "c2");
+  c2->SetGrid();
+  c1->cd();
   c1->SetGrid();
 
   auto decay = new TF1("decay", fitFunc, tmin, tmax, 5);
@@ -71,10 +74,22 @@ void fit_doubleexp() {
   //h->SetMarkerStyle(21);
   //h->SetMarkerSize(0.5);
   h->Draw("E");
+  gStyle->SetOptStat(10);
+  gStyle->SetOptFit(0);
 
-  gStyle->SetOptFit(1111);
   c1->SaveAs("figures/final.eps");
   c1->SaveAs("figures/final.png");
+
+  c2->cd();
+  h->Fit(decay, "L R B I ");
+  //h->SetMarkerStyle(21);
+  //h->SetMarkerSize(0.5);
+  h->Draw("E");
+  h->SetAxisRange(tmin, 6, "X");
+  //gStyle->SetOptStat(0);
+
+  c2->SaveAs("figures/final_zoom.eps");
+  c2->SaveAs("figures/final_zoom.png");
 
 
   double a1 = decay->GetParameter(1), tau1 = decay->GetParameter(2), a2 = decay->GetParameter(3), tau2 = decay->GetParameter(4);

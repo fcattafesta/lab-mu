@@ -1,9 +1,9 @@
 void up_down() {
 
 
-  double tmin = 0.1, tmax = 10;
+  double tmin = 0.125, tmax = 7;
 
-  int nbins_u = 15;
+  int nbins_u = 20;
   int nbins_d = nbins_u;
 
   auto file = new TFile("mag.root");
@@ -36,7 +36,7 @@ void up_down() {
       ch_iii = channel;
       times_iii = times;
 
-      Double_t dt = (times_ii - times_i) * 1e6;
+      Double_t dt = (times_ii - times_i - 15e-9) * 1e6;
 
       if ((ch_ii > ch_i) && ch_i == 1 && ch_iii <= ch_i && dt >= tmin && dt <= tmax) {
 
@@ -46,6 +46,7 @@ void up_down() {
 
   }
 
+  cout << "Entries: " << h_up->GetEntries() + h_down->GetEntries() << endl;
   double eff_up = 0.886;
   double deff_up = 0.008;
 
@@ -108,9 +109,13 @@ void up_down() {
   }
 
   g_x->Fit(func);
+  //g_x->Fit(cte);
   g_x->Draw("PA");
   g_x->SetMarkerStyle(21);
   gStyle->SetOptFit(1111);
+
+  c1->SaveAs("figures/final.eps");
+  c1->SaveAs("figures/final.png");
 
 
 

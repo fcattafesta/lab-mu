@@ -3,9 +3,12 @@ import numpy as np
 import os
 #from array import array
 
+dirpath = os.path.dirname(__file__)
 
-t1, as1 = np.loadtxt("mag/Asymmetry_mag.txt", unpack=True)
-t2, as2 = np.loadtxt("iron/Asymmetry_iron.txt", unpack=True)
+t1, as1 = np.loadtxt(os.path.join(
+    dirpath, 'mag', 'Asymmetry_mag.txt'), unpack=True)
+t2, as2 = np.loadtxt(os.path.join(
+    dirpath, 'iron', 'Asymmetry_iron.txt'), unpack=True)
 
 
 l1 = len(t1)

@@ -1,7 +1,7 @@
 void up_down() {
 
 
-  double tmin = 0.1, tmax = 10;
+  double tmin = 0.1, tmax = 7;
 
   int nbins_u = 15;
   int nbins_d = nbins_u;
@@ -109,6 +109,7 @@ void up_down() {
   }
 
   g_x->Fit(func);
+  //g_x->Fit(cte);
   g_x->Draw("PA");
   g_x->SetMarkerStyle(21);
   gStyle->SetOptFit(1111);

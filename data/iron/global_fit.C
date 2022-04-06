@@ -1,0 +1,138 @@
+
+double free(double* x, double* par) {
+  return par[0] * exp(-x[0] / par[1]);
+}
+
+double bound(double* x, double* par) {
+  return par[0] * exp(-x[0] / par[1]);
+}
+
+double fitFunc(double* x, double* par) {
+  return free(x, par) + bound(x, &par[2]);
+}
+
+void global_fit() {
+
+  double tmin = 0.125, tmax = 25.6;
+
+  int nbins = 50;
+
+  auto file = new TFile("doublestop.root");
+
+  auto tree = file->Get<TTree>("events");
+
+  auto h = new TH1D("Iron", "Iron;#Deltat [#mus]; ", nbins, tmin, tmax);
+  auto h_bck = new TH1D("Background", "Background;#Deltat [#mus]", nbins, tmin, tmax);
+
+  int channel; Double_t times;
+
+  tree->SetBranchAddress("channel", &channel);
+  tree->SetBranchAddress("times", &times);
+
+  for (auto i=0; i<tree->GetEntries()-1; i++) {
+
+      int ch_i, ch_ii, ch_iii;
+      double times_i, times_ii, times_iii;
+
+      tree->GetEntry(i);
+      ch_i = channel;
+      times_i = times;
+
+      tree->GetEntry(i+1);
+      ch_ii = channel;
+      times_ii = times;
+
+      tree->GetEntry(i+2);
+      ch_iii = channel;
+      times_iii = times;
+
+      Double_t dt = (times_ii - times_i - 15e-9) * 1e6;
+
+      if ((ch_ii > ch_i) && ch_i == 1 && ch_iii <= ch_i && dt >= tmin && dt <= tmax) {
+          h->Fill(dt);
+      }
+
+  }
+
+  auto file1 = new TFile("../background/background.root");
+  auto tree1 = file1->Get<TTree>("events");
+
+  tree1->SetBranchAddress("channel", &channel);
+  tree1->SetBranchAddress("times", &times);
+
+  for (auto i=0; i<tree1->GetEntries()-1; i++) {
+
+      int ch_i, ch_ii, ch_iii;
+      double times_i, times_ii, times_iii;
+
+      tree1->GetEntry(i);
+      ch_i = channel;
+      times_i = times;
+
+      tree1->GetEntry(i+1);
+      ch_ii = channel;
+      times_ii = times;
+
+      tree1->GetEntry(i+2);
+      ch_iii = channel;
+      times_iii = times;
+
+      Double_t dt = (times_ii - times_i - 15e-9) * 1e6;
+
+      if ((ch_ii > ch_i) && ch_i == 1 && ch_iii <= ch_i && dt >= tmin && dt <= tmax) {
+          h_bck->Fill(dt);
+      }
+
+  }
+
+  double w = -7.43;
+
+  //h_bck->Scale(w);
+  h->Add(h_bck, w);
+
+  int entries = h->GetEntries();
+
+  auto c1 = new TCanvas("c1", "c1");
+  auto c2 = new TCanvas("c2", "c2");
+  c2->SetGrid();
+  c1->cd();
+  c1->SetGrid();
+
+  auto decay = new TF1("decay", fitFunc, tmin, tmax, 4);
+
+  //decay->SetParameters(1, 1, 1, 1, 1);
+  //h->Fit(decay, "L I R B 0 ");
+
+  decay->SetParameters(300, 2.2, 200, 0.2);
+  // decay->FixParameter(2, 4);
+
+  h->Fit(decay, "L R B I ");
+  //h->SetMarkerStyle(21);
+  //h->SetMarkerSize(0.5);
+  h->Draw("E");
+  //gStyle->SetOptStat(10);
+  gStyle->SetOptFit(1111);
+
+  c1->SaveAs("figures/final.eps");
+  c1->SaveAs("figures/final.png");
+
+  c2->cd();
+  h->SetAxisRange(tmin, 6, "X");
+  h->Draw("E");
+  //gStyle->SetOptStat(0);
+
+  c2->SaveAs("figures/final_zoom.eps");
+  c2->SaveAs("figures/final_zoom.png");
+
+
+  double a1 = decay->GetParameter(0), tau1 = decay->GetParameter(1), a2 = decay->GetParameter(2);
+  double tau2 = decay->GetParameter(3);
+  double da1 = decay->GetParError(0), dtau1 = decay->GetParError(1);
+  double da2 = decay->GetParError(2), dtau2 = decay->GetParError(3);
+
+  double x = a2*tau2/(a1*tau1);
+  double dx = x*((da1/a1) + (dtau1/tau1) + (da2/a2) + (dtau2/tau2));
+
+  cout << "Rapporto abbondanze = " << x << " +- " << dx <<endl;
+
+}

@@ -13,7 +13,7 @@ double fitFunc(double* x, double* par) {
 
 void fit_doubleexp() {
 
-  double tmin = 0.15, tmax = 50.15;
+  double tmin = 0.125, tmax = 50.125;
 
   int nbins = 625;
 
@@ -21,7 +21,7 @@ void fit_doubleexp() {
 
   auto tree = file->Get<TTree>("events");
 
-  auto h = new TH1D("Iron", ";#Delta t [#mus]; ", nbins, tmin, tmax);
+  auto h = new TH1D("Iron", "Iron;#Delta t [#mus]; ", nbins, tmin, tmax);
 
   int channel; Double_t times;
 
@@ -45,7 +45,7 @@ void fit_doubleexp() {
       ch_iii = channel;
       times_iii = times;
 
-      Double_t dt = (times_ii - times_i) * 1e6;
+      Double_t dt = (times_ii - times_i - 15e-9) * 1e6;
 
       if ((ch_ii > ch_i) && ch_i == 1 && ch_iii <= ch_i && dt >= tmin && dt <= tmax) {
           h->Fill(dt);
@@ -57,6 +57,9 @@ void fit_doubleexp() {
   int entries = h->GetEntries();
 
   auto c1 = new TCanvas("c1", "c1");
+  auto c2 = new TCanvas("c2", "c2");
+  c2->SetGrid();
+  c1->cd();
   c1->SetGrid();
 
   auto decay = new TF1("decay", fitFunc, tmin, tmax, 5);
@@ -71,11 +74,22 @@ void fit_doubleexp() {
   //h->SetMarkerStyle(21);
   //h->SetMarkerSize(0.5);
   h->Draw("E");
-
+  gStyle->SetOptStat(10);
   gStyle->SetOptFit(1111);
 
   c1->SaveAs("figures/final.eps");
   c1->SaveAs("figures/final.png");
+
+  c2->cd();
+  h->Fit(decay, "L R B I ");
+  //h->SetMarkerStyle(21);
+  //h->SetMarkerSize(0.5);
+  h->Draw("E");
+  h->SetAxisRange(tmin, 6, "X");
+  //gStyle->SetOptStat(0);
+
+  c2->SaveAs("figures/final_zoom.eps");
+  c2->SaveAs("figures/final_zoom.png");
 
   double a1 = decay->GetParameter(1), tau1 = decay->GetParameter(2), a2 = decay->GetParameter(3), tau2 = decay->GetParameter(4);
   double da1 = decay->GetParError(1), dtau1 = decay->GetParError(2), da2 = decay->GetParError(3), dtau2 = decay->GetParError(4);
@@ -84,5 +98,6 @@ void fit_doubleexp() {
   double dx = x*((da1/a1) + (dtau1/tau1) + (da2/a2) + (dtau2/tau2));
 
   cout << "Rapporto abbondanze = " << x << " +- " << dx <<endl;
+
 
 }
