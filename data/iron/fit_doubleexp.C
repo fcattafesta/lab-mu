@@ -74,8 +74,16 @@ void fit_doubleexp() {
   //h->SetMarkerStyle(21);
   //h->SetMarkerSize(0.5);
   h->Draw("E");
-  gStyle->SetOptStat(10);
-  gStyle->SetOptFit(1111);
+  gStyle->SetOptStat(0);
+  gStyle->SetOptFit(0);
+  auto s_entries = Form("Entries: %.0f", h->GetEntries());
+  auto s_mean = Form("Mean: %.2f", h->GetMean());
+  auto pt = new TPaveText(tmax - 20, 160, tmax, 200, "nb");
+  pt->AddText(s_entries);
+  pt->AddText(s_mean);
+  pt->AddText("Tempo di acquisizione: 5 giorni");
+  pt->AddText("Plot salvato in data 06/04/2022");
+  pt->Draw();
 
   c1->SaveAs("figures/final.eps");
   c1->SaveAs("figures/final.png");
@@ -86,6 +94,12 @@ void fit_doubleexp() {
   //h->SetMarkerSize(0.5);
   h->Draw("E");
   h->SetAxisRange(tmin, 6, "X");
+  auto pt1 = new TPaveText(3, 160, 6, 200, "nb");
+  pt1->AddText(s_entries);
+  pt1->AddText(s_mean);
+  pt1->AddText("Tempo di acquisizione: 5 giorni");
+  pt1->AddText("Plot salvato in data 06/04/2022");
+  pt1->Draw();
   //gStyle->SetOptStat(0);
 
   c2->SaveAs("figures/final_zoom.eps");

@@ -13,9 +13,9 @@ double fitFunc(double* x, double* par) {
 
 void global_fit() {
 
-  double tmin = 0.125, tmax = 25.6;
+  double tmin = 0.125, tmax = 50.125;
 
-  int nbins = 50;
+  int nbins = 100;
 
   auto file = new TFile("doublestop.root");
 
@@ -117,8 +117,8 @@ void global_fit() {
   c1->SaveAs("figures/final.png");
 
   c2->cd();
-  h->SetAxisRange(tmin, 6, "X");
   h->Draw("E");
+  h->SetAxisRange(tmin, 6, "X");
   //gStyle->SetOptStat(0);
 
   c2->SaveAs("figures/final_zoom.eps");

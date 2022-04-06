@@ -13,9 +13,9 @@ double fitFunc(double* x, double* par) {
 
 void fit_doubleexp() {
 
-  double tmin = 0.1, tmax = 50.15;
+  double tmin = 0.125, tmax = 50.15;
 
-  int nbins = 1000;
+  int nbins = 200;
 
   auto file = new TFile("mag.root");
 
@@ -45,7 +45,39 @@ void fit_doubleexp() {
       ch_iii = channel;
       times_iii = times;
 
-      Double_t dt = (times_ii - times_i) * 1e6;
+      Double_t dt = (times_ii - times_i - 15e-9) * 1e6;
+
+      if ((ch_ii > ch_i) && ch_i == 1 && ch_iii <= ch_i && dt >= tmin && dt <= tmax) {
+          h->Fill(dt);
+      }
+
+  }
+
+  auto file1 = new TFile("../iron/doublestop.root");
+
+  auto tree1 = file1->Get<TTree>("events");
+
+  tree1->SetBranchAddress("channel", &channel);
+  tree1->SetBranchAddress("times", &times);
+
+  for (auto i=0; i<tree1->GetEntries()-1; i++) {
+
+      int ch_i, ch_ii, ch_iii;
+      double times_i, times_ii, times_iii;
+
+      tree1->GetEntry(i);
+      ch_i = channel;
+      times_i = times;
+
+      tree1->GetEntry(i+1);
+      ch_ii = channel;
+      times_ii = times;
+
+      tree1->GetEntry(i+2);
+      ch_iii = channel;
+      times_iii = times;
+
+      Double_t dt = (times_ii - times_i - 15e-9) * 1e6;
 
       if ((ch_ii > ch_i) && ch_i == 1 && ch_iii <= ch_i && dt >= tmin && dt <= tmax) {
           h->Fill(dt);
