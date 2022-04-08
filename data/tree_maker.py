@@ -39,18 +39,18 @@ def make_tree(filepath, datapath, name):
 
 
 datapath = os.path.join(os.path.dirname(__file__),
-                        'background', 'acquisitions')
+                        'nacl', 'acquisitions')
 
 # filenames = ['0803_1530.dat', '0803_1606.dat',
 # '0803_1635.dat', '0903_1125.dat']
 
-filenames = '0504_1700_empty.dat'
+filenames = '0604_1115_nacl.dat'
 
 
 filepaths = os.path.join(datapath, filenames)
-rootpath = os.path.join(os.path.dirname(__file__), 'background')
+rootpath = os.path.join(os.path.dirname(__file__), 'nacl')
 
 # make_tree(merge_dat(filepaths, datapath, name='doublestop.dat'),
 #          rootpath, name='doublestop.root')
 make_tree(filepaths,
-          rootpath, name='background.root')
+          rootpath, name='nacl.root')

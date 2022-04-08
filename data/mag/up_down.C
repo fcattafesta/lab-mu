@@ -1,7 +1,7 @@
 void up_down() {
 
 
-  double tmin = 0.125, tmax = 7;
+  double tmin = 0.125, tmax = 2;
 
   int nbins_u = 20;
   int nbins_d = nbins_u;
@@ -108,17 +108,17 @@ void up_down() {
     }
   }
 
-  g_x->Fit(func);
-  //g_x->Fit(cte);
+  //g_x->Fit(func);
+  g_x->Fit(cte);
   g_x->Draw("PA");
   g_x->SetMarkerStyle(21);
-  gStyle->SetOptFit(0);
+  gStyle->SetOptFit(1111);
   auto s_entries = Form("Entries: %.0f", h_up->GetEntries()+h_down->GetEntries());
   auto pt = new TPaveText(tmax - 2, 0.1, tmax+2, 0.2, "nb");
   pt->AddText(s_entries);
   pt->AddText("Tempo di acquisizione: 5 giorni");
   pt->AddText("Plot salvato in data 06/04/2022");
-  pt->Draw();
+  //pt->Draw();
 
   c1->SaveAs("figures/final.eps");
   c1->SaveAs("figures/final.png");

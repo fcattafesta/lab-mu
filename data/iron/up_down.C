@@ -84,6 +84,19 @@ void up_down() {
     err_t[i-1] = h_up->GetBinWidth(i) * 0.5;
     }
   }
+  double n_up = h_up->GetEntries() / eff_up;
+  double n_down = h_down->GetEntries() / eff_down;
+
+  double dn_up = (n_up / pow(eff_up, 2) ) * deff_up;
+  double dn_down = (n_down / pow(eff_down, 2)) * deff_down;
+
+  double x = (n_up - n_down) / (n_up + n_down);
+  double dx_bin = (2/(n_up+n_down))*TMath::Sqrt(n_up*n_down/(n_up+n_down));
+  double dx_eff = (2/pow(n_up+n_down, 2))*TMath::Sqrt(pow(n_down * dn_up, 2) + pow(n_up *dn_down, 2));
+  double dx = TMath::Sqrt(pow(dx_bin, 2) + pow(dx_eff, 2));
+
+  cout << x << " +- " << dx << endl;
+  cout << "sist. " << dx_bin << "stat." << dx_eff << endl;
   cout << h_up->GetBinContent(8) << endl;
   cout << h_down->GetBinContent(8) << endl;
   cout << "Up entries: " << h_up->GetEntries() <<endl;
@@ -108,7 +121,7 @@ void up_down() {
     }
   }
 
-  g_x->Fit(func);
+  //g_x->Fit(func);
   g_x->Fit(cte);
   g_x->Draw("PA");
   g_x->SetMarkerStyle(21);

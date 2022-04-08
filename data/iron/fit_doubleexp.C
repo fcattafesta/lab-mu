@@ -57,9 +57,10 @@ void fit_doubleexp() {
   int entries = h->GetEntries();
 
   auto c1 = new TCanvas("c1", "c1");
+  c1->Divide(1, 2);
   auto c2 = new TCanvas("c2", "c2");
   c2->SetGrid();
-  c1->cd();
+  c1->cd(1);
   c1->SetGrid();
 
   auto decay = new TF1("decay", fitFunc, tmin, tmax, 5);
@@ -85,6 +86,15 @@ void fit_doubleexp() {
   pt->AddText("Plot salvato in data 06/04/2022");
   pt->Draw();
 
+  c1->cd(2);
+  auto res = new TH1D("res", ";#Deltat [#micros]", nbins, tmax, tmin);
+
+  for (auto i=1; i<=nbins; i++) {
+    double diff = h->GetBinContent(i) - decay->Eval(h->GetBinCenter(i));
+    res->SetBinContent(i, diff);
+  }
+  res->Draw();
+  res->SetAxisRange(-10, 10, "Y");
   c1->SaveAs("figures/final.eps");
   c1->SaveAs("figures/final.png");
 
