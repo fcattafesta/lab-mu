@@ -84,20 +84,43 @@ void up_down() {
     err_t[i-1] = h_up->GetBinWidth(i) * 0.5;
     }
   }
-  cout << h_up->GetBinContent(8) << endl;
-  cout << h_down->GetBinContent(8) << endl;
-  cout << "Up entries: " << h_up->GetEntries() <<endl;
-  cout << "Down entries: " << h_down->GetEntries() <<endl;
-  cout << "Tot entries: " << h_down->GetEntries() + h_up->GetEntries() <<endl;
 
-  auto c1 = new TCanvas();
+  int entries = h_down->GetEntries() + h_up->GetEntries();
+  double n_up = h_up->GetEntries() / eff_up;
+  double n_down = h_down->GetEntries() / eff_down;
+
+  double dn_up = (n_up / pow(eff_up, 2) ) * deff_up;
+  double dn_down = (n_down / pow(eff_down, 2)) * deff_down;
+
+  double x = (n_up - n_down) / (n_up + n_down);
+  double dx_bin = (2/(n_up+n_down))*TMath::Sqrt(n_up*n_down/(n_up+n_down));
+  double dx_eff = (2/pow(n_up+n_down, 2))*TMath::Sqrt(pow(n_down * dn_up, 2) + pow(n_up *dn_down, 2));
+  double dx = TMath::Sqrt(pow(dx_bin, 2) + pow(dx_eff, 2));
+
+  cout << x << " +- " << dx_bin << " (stat.)" << " +- " << dx_eff << " (syst)" << endl;
+
+  auto c1 = new TCanvas("c1", "c1");
+
+  TPad *pad1 = new TPad("","",0,0.5,1,1);
+  TPad *pad2 = new TPad("","",0,0,1,0.5);
+  pad1->SetBottomMargin(0.00001);
+  pad1->SetBorderMode(0);
+  pad2->SetTopMargin(0.00001);
+  pad2->SetBottomMargin(0.2);
+  pad2->SetBorderMode(0);
+  pad1->Draw();
+  pad2->Draw();
+
 
   auto func = new TF1("func", "[0] + [1]*cos([2]*x)", tmin, tmax);
   auto cte = new TF1("const", "pol0", tmin, tmax);
   func->SetParameters(0., 1, 1.7);
-  c1->SetGrid();
+
+  pad1->cd();
+  pad1->SetGrid();
 
   auto g_x = new TGraphErrors();
+  auto g_x_cl = new TGraphErrors();
   g_x->SetTitle("Asymmetry; #Deltat [#mus];");
 
   for (auto i=0; i<nbins_u; i++) {
@@ -105,27 +128,49 @@ void up_down() {
     if (x_t[i] != 58) {
       g_x->AddPoint(t[i], x_t[i]);
       g_x->SetPointError(n, err_t[i], err_x[i]);
+      g_x_cl->AddPoint(t[i], x_t[i]);
+      g_x_cl->SetPointError(n, err_t[i], err_x[i]);
     }
   }
 
-  //g_x->Fit(func);
-  g_x->Fit(cte);
-  g_x->Draw("PA");
+
+  g_x->Fit(func, "");
+  func->Draw("SAME");
+  //g_x->Fit(cte);
+  g_x->Draw("PA SAME");
   g_x->SetMarkerStyle(21);
-  gStyle->SetOptFit(1111);
+  g_x->GetYaxis()->SetLabelSize(0.07);
+
+
   auto s_entries = Form("Entries: %.0f", h_up->GetEntries()+h_down->GetEntries());
-  auto pt = new TPaveText(tmax - 2, 0.1, tmax+2, 0.2, "nb");
+  auto pt = new TPaveText(tmax -0.6, 0.1, tmax + 0.2, 0.3, "nb");
+  //auto pt = new TPaveText(tmax -2, 0.08, tmax + 2, 0.2, "nb");  pt->AddText(s_entries);
   pt->AddText(s_entries);
-  pt->AddText("Tempo di acquisizione: 5 giorni");
-  pt->AddText("Plot salvato in data 06/04/2022");
-  //pt->Draw();
+  pt->AddText("Tempo di acquisizione: 169 h");
+  pt->AddText("Plot salvato in data 08/04/2022");
+  pt->Draw();
+
+  pad2->cd();
+  pad2->SetGrid();
+
+  g_x_cl->Fit(cte, "");
+  gStyle->SetOptFit(0);
+  gStyle->SetOptStat(0);
+  cte->Draw("SAME");
+  g_x_cl->Draw("PA SAME");
+  g_x_cl->SetTitle("");
+  g_x_cl->GetXaxis()->SetLabelSize(0.07);
+  g_x_cl->GetXaxis()->SetTitleSize(0.08);
+  g_x_cl->GetYaxis()->SetLabelSize(0.07);
+  g_x_cl->GetXaxis()->SetTitle("#Deltat [#mus]");
+  g_x_cl->SetMarkerStyle(21);
 
   c1->SaveAs("figures/final.eps");
   c1->SaveAs("figures/final.png");
 
 
 
-ofstream newfile;
+/*ofstream newfile;
 newfile.open("Asymmetry_mag.txt");
 newfile << "#time    #asymm" << "\n";
 
@@ -133,7 +178,7 @@ for (int idx=0; idx < nbins_u ;idx++) {
 newfile << t[idx] << "    " << x_t[idx] << "\n"; //write to file
 }
 
-newfile.close();
+newfile.close();*/
 
 
 

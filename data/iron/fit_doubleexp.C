@@ -57,11 +57,15 @@ void fit_doubleexp() {
   int entries = h->GetEntries();
 
   auto c1 = new TCanvas("c1", "c1");
-  c1->Divide(1, 2);
-  auto c2 = new TCanvas("c2", "c2");
-  c2->SetGrid();
-  c1->cd(1);
-  c1->SetGrid();
+  TPad *pad1 = new TPad("","",0,0.33,1,1);
+  TPad *pad2 = new TPad("","",0,0,1,0.33);
+  pad1->SetBottomMargin(0.00001);
+  pad1->SetBorderMode(0);
+  pad2->SetTopMargin(0.00001);
+  pad2->SetBottomMargin(0.2);
+  pad2->SetBorderMode(0);
+  pad1->Draw();
+  pad2->Draw();
 
   auto decay = new TF1("decay", fitFunc, tmin, tmax, 5);
 
@@ -70,7 +74,8 @@ void fit_doubleexp() {
 
   decay->SetParameters(0.5, 75, 2.197, 150, 0.2);
   // decay->FixParameter(2, 4);
-
+  pad1->cd();
+  pad1->SetGrid();
   h->Fit(decay, "L R B I ");
   //h->SetMarkerStyle(21);
   //h->SetMarkerSize(0.5);
@@ -82,27 +87,39 @@ void fit_doubleexp() {
   auto pt = new TPaveText(tmax - 20, 160, tmax, 200, "nb");
   pt->AddText(s_entries);
   pt->AddText(s_mean);
-  pt->AddText("Tempo di acquisizione: 5 giorni");
-  pt->AddText("Plot salvato in data 06/04/2022");
+  pt->AddText("Tempo di acquisizione: 121 h");
+  pt->AddText("Plot salvato in data 08/04/2022");
   pt->Draw();
 
-  c1->cd(2);
-  auto res = new TH1D("res", ";#Deltat [#micros]", nbins, tmax, tmin);
+  pad2->cd();
+  pad2->SetGrid();
+  auto res = new TGraph();
 
   for (auto i=1; i<=nbins; i++) {
     double diff = h->GetBinContent(i) - decay->Eval(h->GetBinCenter(i));
-    res->SetBinContent(i, diff);
+    res->AddPoint(h->GetBinCenter(i), diff);
   }
-  res->Draw();
-  res->SetAxisRange(-10, 10, "Y");
+  res->SetMarkerStyle(8);
+  res->SetMarkerSize(0.8);
+  res->Draw("AP");
+  res->GetXaxis()->SetLabelSize(0.07);
+  res->GetXaxis()->SetLimits(tmin, tmax);
+  res->GetXaxis()->SetTitleSize(0.1);
+  res->GetXaxis()->SetTitle("#Deltat [#mus]");
+  res->GetYaxis()->SetLabelSize(0.07);
+
+  auto zero = new TF1("zero", "0", tmin, tmax);
+  zero->Draw("SAME");
+  //res->SetAxisRange(-10, 10, "Y");
   c1->SaveAs("figures/final.eps");
   c1->SaveAs("figures/final.png");
 
-  c2->cd();
-  h->Fit(decay, "L R B I ");
+  /*c2->cd();
+  res->Draw();
+  //h->Fit(decay, "L R B I ");
   //h->SetMarkerStyle(21);
   //h->SetMarkerSize(0.5);
-  h->Draw("E");
+  //h->Draw("E");
   h->SetAxisRange(tmin, 6, "X");
   auto pt1 = new TPaveText(3, 160, 6, 200, "nb");
   pt1->AddText(s_entries);
@@ -114,7 +131,7 @@ void fit_doubleexp() {
 
   c2->SaveAs("figures/final_zoom.eps");
   c2->SaveAs("figures/final_zoom.png");
-
+  */
   double a1 = decay->GetParameter(1), tau1 = decay->GetParameter(2), a2 = decay->GetParameter(3), tau2 = decay->GetParameter(4);
   double da1 = decay->GetParError(1), dtau1 = decay->GetParError(2), da2 = decay->GetParError(3), dtau2 = decay->GetParError(4);
 

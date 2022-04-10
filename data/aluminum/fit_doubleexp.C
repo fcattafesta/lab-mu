@@ -13,7 +13,7 @@ double fitFunc(double* x, double* par) {
 
 void fit_doubleexp() {
 
-  double tmin = 0.15, tmax = 50.15;
+  double tmin = 0.125, tmax = 50.15;
 
   int nbins = 625;
 
@@ -45,7 +45,7 @@ void fit_doubleexp() {
       ch_iii = channel;
       times_iii = times;
 
-      Double_t dt = (times_ii - times_i) * 1e6;
+      Double_t dt = (times_ii - times_i - 15e-9) * 1e6;
 
       if ((ch_ii > ch_i) && ch_i == 1 && ch_iii <= ch_i && dt >= tmin && dt <= tmax) {
           h->Fill(dt);
@@ -57,10 +57,15 @@ void fit_doubleexp() {
   int entries = h->GetEntries();
 
   auto c1 = new TCanvas("c1", "c1");
-  auto c2 = new TCanvas("c2", "c2");
-  c2->SetGrid();
-  c1->cd();
-  c1->SetGrid();
+  TPad *pad1 = new TPad("","",0,0.33,1,1);
+  TPad *pad2 = new TPad("","",0,0,1,0.33);
+  pad1->SetBottomMargin(0.00001);
+  pad1->SetBorderMode(0);
+  pad2->SetTopMargin(0.00001);
+  pad2->SetBottomMargin(0.2);
+  pad2->SetBorderMode(0);
+  pad1->Draw();
+  pad2->Draw();
 
   auto decay = new TF1("decay", fitFunc, tmin, tmax, 5);
 
@@ -69,6 +74,8 @@ void fit_doubleexp() {
 
   decay->SetParameters(10, 300, 2.2, 200, 0.88);
   // decay->FixParameter(2, 4);
+  pad1->cd();
+  pad1->SetGrid();
 
   h->Fit(decay, "L R B I ");
   //h->SetMarkerStyle(21);
@@ -81,13 +88,34 @@ void fit_doubleexp() {
   auto pt = new TPaveText(tmax - 20, 160, tmax, 200, "nb");
   pt->AddText(s_entries);
   pt->AddText(s_mean);
-  pt->AddText("Tempo di acquisizione: 5 giorni");
-  pt->AddText("Plot salvato in data 06/04/2022");
+  pt->AddText("Tempo di acquisizione: 117 h");
+  pt->AddText("Plot salvato in data 08/04/2022");
   pt->Draw();
+
+  pad2->cd();
+  pad2->SetGrid();
+  auto res = new TGraph();
+
+  for (auto i=1; i<=nbins; i++) {
+    double diff = h->GetBinContent(i) - decay->Eval(h->GetBinCenter(i));
+    res->AddPoint(h->GetBinCenter(i), diff);
+  }
+  res->SetMarkerStyle(8);
+  res->SetMarkerSize(0.8);
+  res->Draw("AP");
+  res->GetXaxis()->SetLabelSize(0.07);
+  res->GetXaxis()->SetLimits(tmin, tmax);
+  res->GetXaxis()->SetTitle("#Deltat [#mus]");
+  res->GetXaxis()->SetTitleSize(0.1);
+  res->GetYaxis()->SetLabelSize(0.07);
+
+  auto zero = new TF1("zero", "0", tmin, tmax);
+  zero->Draw("SAME");
+
   c1->SaveAs("figures/final.eps");
   c1->SaveAs("figures/final.png");
 
-  c2->cd();
+  /*c2->cd();
   h->Fit(decay, "L R B I ");
   //h->SetMarkerStyle(21);
   //h->SetMarkerSize(0.5);
@@ -102,7 +130,7 @@ void fit_doubleexp() {
   //gStyle->SetOptStat(0);
 
   c2->SaveAs("figures/final_zoom.eps");
-  c2->SaveAs("figures/final_zoom.png");
+  c2->SaveAs("figures/final_zoom.png");*/
 
 
   double a1 = decay->GetParameter(1), tau1 = decay->GetParameter(2), a2 = decay->GetParameter(3), tau2 = decay->GetParameter(4);

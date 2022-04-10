@@ -1,12 +1,14 @@
 void up_down() {
 
 
-  double tmin = 0.1, tmax = 55.0;
+  double tmin = 0.1, tmax = 7;
 
-  int nbins_u = 80;
-  int nbins_d = 80;
+  int nbins_u = 15;
+  int nbins_d = nbins_u;
 
   auto file = new TFile("doublestop.root");
+
+
 
   auto tree = file->Get<TTree>("events");
 
@@ -45,17 +47,45 @@ void up_down() {
 
   }
 
-  double n_up = h_up->GetEntries()*1.;
-  double n_down = h_down->GetEntries()*1.;
+  double eff_up = 0.886;
+  double deff_up = 0.008;
 
-  double eff_up = (0.968 * 0.930);
-  double deff_up = TMath::Sqrt(pow(0.005/0.968, 2) + pow(0.007/0.930, 2));
+  double eff_down = 0.737;
+  double deff_down = 0.012;
 
-  double eff_down = (0.92 * 0.856);
-  double deff_down = TMath::Sqrt(pow(0.01/0.92, 2) + pow(0.009/0.856, 2));
+  double x_t[nbins_u], err_x[nbins_u], t[nbins_u], err_t[nbins_u];
 
-  n_up = n_up / eff_up;
-  n_down = n_down / eff_down;
+  for (auto i=1; i<=nbins_u; i++) {
+    auto n_up = h_up->GetBinContent(i);
+    auto n_down = h_down->GetBinContent(i);
+
+    if (n_up==0 || n_down==0) {
+      x_t[i-1] = 58;
+      err_x[i-1] = 58;
+      t[i-1] = h_up->GetBinCenter(i);
+      err_t[i-1] = h_up->GetBinWidth(i) * 0.5;
+    }
+
+    else {
+    n_up = n_up / eff_up;
+    n_down = n_down / eff_down;
+
+    double dn_up = (n_up / pow(eff_up, 2) ) * deff_up;
+    double dn_down = (n_down / pow(eff_down, 2)) * deff_down;
+
+    double x = (n_up - n_down) / (n_up + n_down);
+    double dx_bin = (2/(n_up+n_down))*TMath::Sqrt(n_up*n_down/(n_up+n_down));
+    double dx_eff = (2/pow(n_up+n_down, 2))*TMath::Sqrt(pow(n_down * dn_up, 2) + pow(n_up *dn_down, 2));
+    double dx = TMath::Sqrt(pow(dx_bin, 2) + pow(dx_eff, 2));
+
+    x_t[i-1] = x;
+    err_x[i-1] = dx;
+    t[i-1] = h_up->GetBinCenter(i);
+    err_t[i-1] = h_up->GetBinWidth(i) * 0.5;
+    }
+  }
+  double n_up = h_up->GetEntries() / eff_up;
+  double n_down = h_down->GetEntries() / eff_down;
 
   double dn_up = (n_up / pow(eff_up, 2) ) * deff_up;
   double dn_down = (n_down / pow(eff_down, 2)) * deff_down;
@@ -63,16 +93,76 @@ void up_down() {
   double x = (n_up - n_down) / (n_up + n_down);
   double dx_bin = (2/(n_up+n_down))*TMath::Sqrt(n_up*n_down/(n_up+n_down));
   double dx_eff = (2/pow(n_up+n_down, 2))*TMath::Sqrt(pow(n_down * dn_up, 2) + pow(n_up *dn_down, 2));
-
   double dx = TMath::Sqrt(pow(dx_bin, 2) + pow(dx_eff, 2));
 
-  cout << "Asimmetria: " << x << " +- " << dx << endl;
-  cout << "Eventi totali = " << n_up+n_down << endl;
+  cout << x << " +- " << dx_bin << " (stat.)" << " +- " << dx_eff << " (syst)" << endl;
 
   auto c1 = new TCanvas("c1", "c1");
-  h_up->Draw("E1");
-  h_x->Draw("E1");
-  auto c2 = new TCanvas("c2", "c2");
-  h_down->Draw("E1");
 
+  TPad *pad1 = new TPad("","",0,0.5,1,1);
+  TPad *pad2 = new TPad("","",0,0,1,0.5);
+  pad1->SetBottomMargin(0.00001);
+  pad1->SetBorderMode(0);
+  pad2->SetTopMargin(0.00001);
+  pad2->SetBottomMargin(0.2);
+  pad2->SetBorderMode(0);
+  pad1->Draw();
+  pad2->Draw();
+
+
+  auto func = new TF1("func", "[0] + [1]*cos([2]*x)", tmin, tmax);
+  auto cte = new TF1("const", "pol0", tmin, tmax);
+  func->SetParameters(0., 1, 1.7);
+
+  pad1->cd();
+  pad1->SetGrid();
+
+  auto g_x = new TGraphErrors();
+  auto g_x_cl = new TGraphErrors();
+  g_x->SetTitle("Asymmetry; #Deltat [#mus];");
+
+  for (auto i=0; i<nbins_u; i++) {
+    auto n = g_x->GetN();
+    if (x_t[i] != 58) {
+      g_x->AddPoint(t[i], x_t[i]);
+      g_x->SetPointError(n, err_t[i], err_x[i]);
+      g_x_cl->AddPoint(t[i], x_t[i]);
+      g_x_cl->SetPointError(n, err_t[i], err_x[i]);
+    }
+  }
+
+
+  g_x->Fit(func, "");
+  func->Draw("SAME");
+  //g_x->Fit(cte);
+  g_x->Draw("PA SAME");
+  g_x->SetMarkerStyle(21);
+  g_x->GetYaxis()->SetLabelSize(0.07);
+
+
+  auto s_entries = Form("Entries: %.0f", h_up->GetEntries()+h_down->GetEntries());
+  //auto pt = new TPaveText(tmax -0.6, 0.09, tmax + 0.2, 0.21, "nb");
+  auto pt = new TPaveText(tmax -2, 0.02, tmax + 1, 0.15, "nb");
+  pt->AddText(s_entries);
+  pt->AddText("Tempo di acquisizione: 117 h");
+  pt->AddText("Plot salvato in data 08/04/2022");
+  pt->Draw();
+
+  pad2->cd();
+  pad2->SetGrid();
+
+  g_x_cl->Fit(cte, "");
+  gStyle->SetOptFit(0);
+  gStyle->SetOptStat(0);
+  cte->Draw("SAME");
+  g_x_cl->Draw("PA SAME");
+  g_x_cl->SetTitle("");
+  g_x_cl->GetXaxis()->SetLabelSize(0.07);
+  g_x_cl->GetXaxis()->SetTitleSize(0.07);
+  g_x_cl->GetXaxis()->SetTitle("#Deltat [#mus]");
+  g_x_cl->GetYaxis()->SetLabelSize(0.07);
+  g_x_cl->SetMarkerStyle(21);
+
+  c1->SaveAs("figures/final.eps");
+  c1->SaveAs("figures/final.png");
 }

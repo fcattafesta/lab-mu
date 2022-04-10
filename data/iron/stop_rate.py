@@ -8,7 +8,7 @@ counts_path = os.path.join(os.path.dirname(__file__), 'stop_rate.txt')
 data_path = fig_path = os.path.join(os.path.dirname(
     __file__), 'acquisitions', 'stop_rate.txt')
 
-fig_path = os.path.join(os.path.dirname(__file__), 'figures', 'stop_rate.png')
+fig_path = os.path.join(os.path.dirname(__file__), 'figures', 'stop_rate.eps')
 width, _, stop = np.loadtxt(counts_path, unpack=True)
 
 dwidth = np.ones_like(width) * 0.1
