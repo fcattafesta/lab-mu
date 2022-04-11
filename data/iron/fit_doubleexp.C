@@ -76,12 +76,12 @@ void fit_doubleexp() {
   // decay->FixParameter(2, 4);
   pad1->cd();
   pad1->SetGrid();
-  h->Fit(decay, "L R B I ");
+  h->Fit(decay, "L R B I V ");
   //h->SetMarkerStyle(21);
   //h->SetMarkerSize(0.5);
   h->Draw("E");
   gStyle->SetOptStat(0);
-  gStyle->SetOptFit(0);
+  gStyle->SetOptFit(1111);
   auto s_entries = Form("Entries: %.0f", h->GetEntries());
   auto s_mean = Form("Mean: %.2f", h->GetMean());
   auto pt = new TPaveText(tmax - 20, 160, tmax, 200, "nb");
@@ -135,8 +135,11 @@ void fit_doubleexp() {
   double a1 = decay->GetParameter(1), tau1 = decay->GetParameter(2), a2 = decay->GetParameter(3), tau2 = decay->GetParameter(4);
   double da1 = decay->GetParError(1), dtau1 = decay->GetParError(2), da2 = decay->GetParError(3), dtau2 = decay->GetParError(4);
 
-  double x = a2*tau2/(a1*tau1);
-  double dx = x*((da1/a1) + (dtau1/tau1) + (da2/a2) + (dtau2/tau2));
+  double n1 = a1 * tau1; double dn1 = sqrt( pow(a1 * dtau1, 2) + pow(tau1 * da1, 2) + (2 * n1) * (-3.678e-01));
+  double n2 = a2 * tau2; double dn2 = sqrt( pow(a2 * dtau2, 2) + pow(tau2 * da2, 2) + (2 * n2) * (-1.371e+00));
+
+  double x = (n1 - n2) / (n1 + n2);
+  double dx = (dn1 + dn2) * (1.0/(n1 + n2) + 1.0/(n1 - n2));
 
   cout << "Rapporto abbondanze = " << x << " +- " << dx <<endl;
 
